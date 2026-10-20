@@ -32,6 +32,15 @@ Free AI tiers look generous until you actually use them. Every failure is one of
 
 An agent that picks one model and dies on a `402` is the most common way a "free AI" setup fails in production. This package removes that failure mode: it **knows every limit** and **moves the request to the next free model in the same turn**.
 
+## Install everything (one command)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rustemmustafingovua-byte/opencode-free-stack/main/install.sh | bash
+```
+
+No npm login, no token — every CLI installs from its release tarball.
+Pick a subset with `--only mcp-doctor,free-web-mcp`.
+
 ## Install
 
 ```bash
