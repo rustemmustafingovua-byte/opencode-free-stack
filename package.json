@@ -31,7 +31,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test test/*.test.js",
     "lint": "node --check src/index.js && node --check bin/ofs.js",
     "sync-models": "node scripts/sync-models.mjs"
   },
