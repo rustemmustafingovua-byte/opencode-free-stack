@@ -145,6 +145,28 @@ next free model — no manual model switch, no lost work.
 - [ ] hosted registry API with an x402 price
 - [ ] policy file to pin which providers may be used at all
 
+## CLI
+
+```
+ofs — Free-model router for OpenCode.
+
+USAGE
+  ofs models
+  ofs status
+  ofs chain
+  ofs route "explain quicksort"
+
+COMMANDS / OPTIONS
+  models          list every known free model, grouped by provider
+  status          which providers are configured and how much quota is left
+  chain           print the fallback order that would be used
+  route <prompt>  send one prompt through the fallback chain
+
+Environment: OPENCODE_API_KEY, GITHUB_TOKEN, BEATAPI_API_KEY, APINEX_API_KEY
+
+MIT · https://github.com/rustemmustafingovua-byte
+```
+
 ## Part of a portfolio
 
 Thirteen MIT tools, one theme: making agent setups work, cheap and safe.
