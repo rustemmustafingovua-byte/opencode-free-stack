@@ -95,9 +95,13 @@ await clickExpr(`(()=>{const s=document.getElementById('packagesAndScopesSome');
 await sleep(1500)
 await realClick(`[...document.querySelectorAll('input')].find(x=>/filter packages/i.test(x.placeholder||''))`)
 await sleep(400)
-await send("Input.insertText", { text: "rustemmustafingovua-byte" })
+await send("Input.insertText", { text: "rustemmustafingovua" })
 await sleep(1500)
-await clickExpr(`(()=>{const b=[...document.querySelectorAll('button[aria-labelledby*="@rustemmustafingovua-byte"]')][0];if(b)b.click();return 1})()`)
+// выбираем и личный скоуп, и орг-скоуп
+for (const scope of ["@rustemmustafingovua-byte", "@rustemmustafingovua "]) {
+  await clickExpr(`(()=>{const b=[...document.querySelectorAll('button[aria-labelledby*=${JSON.stringify(scope)}]')][0];if(b&&b.getAttribute('aria-checked')!=='true')b.click();return 1})()`)
+  await sleep(800)
+}
 await sleep(1200)
 // переустановить имя токена (на случай если текст фильтра попал туда)
 await clickExpr(`(()=>{const i=document.querySelector('input[name=tokenName]');if(i){i.focus();i.value='';}return 1})()`)
