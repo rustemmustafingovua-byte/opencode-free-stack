@@ -1,31 +1,36 @@
 <div align="center">
 
+<img src="docs/social-preview.png" alt="opencode-free-stack" width="100%">
+
 # opencode-free-stack
 
-**Free-model stack for [OpenCode](https://opencode.ai) — route every request to a model that costs you $0, fall back automatically when a provider runs dry, and keep an eye on your daily quotas.**
+**Free-model stack for [OpenCode](https://opencode.ai) — route every request to a model that costs $0, fall back automatically when a provider runs dry, and keep an eye on your daily quotas.**
 
-[![npm](https://img.shields.io/npm/v/opencode-free-stack)](https://www.npmjs.com/package/opencode-free-stack)
-[![license](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
-[![tests](https://img.shields.io/badge/tests-node--test-green)](./test)
-[![paid](https://img.shields.io/badge/USDC-0x8aC6a229f254980CCd3Dd35CF5E1B7c08880B40E-8A2BE2)](https://base.org)
+[![CI](https://github.com/rustemmustafingovua-byte/opencode-free-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/rustemmustafingovua-byte/opencode-free-stack/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/opencode-free-stack?color=cb3837&logo=npm)](https://www.npmjs.com/package/opencode-free-stack)
+[![license](https://img.shields.io/badge/license-MIT-8b949e?logo=opensourceinitiative)](./LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D20-3c873a?logo=node.js)](https://nodejs.org)
+[![paid](https://img.shields.io/badge/USDC-0x8aC6a229f254980CCd3Dd35CF5E1B7c08880B40E-2775ca?logo=ethereum)](https://base.org)
+[![docs](https://img.shields.io/badge/docs-GitHub%20Pages-58a6ff)](https://rustemmustafingovua-byte.github.io/opencode-free-stack/)
+
+[**Docs**](https://rustemmustafingovua-byte.github.io/opencode-free-stack/) · [Strategy](STRATEGY.md) · [Launch kit](LAUNCH.md) · [Issues](https://github.com/rustemmustafingovua-byte/opencode-free-stack/issues) · [Discussions](https://github.com/rustemmustafingovua-byte/opencode-free-stack/discussions)
 
 </div>
 
-## Why
+---
 
-Free AI tiers look generous until you actually use them:
+## The problem
 
-| Provider | Free models | The catch |
+Free AI tiers look generous until you actually use them. Every failure is one of three limit systems:
+
+| Limit | What it looks like | Which providers do it |
 |---|---|---|
-| **OpenCode Zen** | 10 | Served only from inside OpenCode |
-| **GitHub Copilot** | 5 | ~50 premium requests/month, Claude blocked on free |
-| **BeatAPI** | 5 | 1 request/min until you top up (10/min after) |
-| **APInex** | 9 | 10M tokens/day, spent as `tokens × model weight` (2–4×) |
-| **Venice AI** | paid | Claude from $0.10/1M via x402 USDC |
+| **RPM** | `429 Rate limit exceeded` | all of them |
+| **Daily token pool** | `402 Free 10M tokens used` | APInex (10M/day) |
+| **Model weight** | the pool drains 2–4× faster than the token count suggests | APInex (`weight` 1–4) |
+| **Plan gate** | `only available with a subscription` | APInex (Claude, Kimi, GLM Pro) |
 
-The failure mode is always the same: your agent picks one model, the provider answers `402 Free 10M tokens used` or `429`, and the run dies.
-
-`opencode-free-stack` fixes that: a **fallback router** that knows every free model, its RPM cap and its daily pool — and quietly moves to the next one.
+An agent that picks one model and dies on a `402` is the most common way a "free AI" setup fails in production. This package removes that failure mode: it **knows every limit** and **moves the request to the next free model in the same turn**.
 
 ## Install
 
@@ -40,7 +45,7 @@ export BEATAPI_API_KEY=...     # BeatAPI
 export APINEX_API_KEY=...      # APInex
 ```
 
-## Use
+## Quickstart
 
 ```bash
 ofs models            # every known free model, grouped by provider
@@ -62,62 +67,93 @@ if (res.ok) {
 }
 ```
 
-## How the fallback works
+## How it works
 
-1. Build a chain: the **preferred** model of each provider first, then its other free models.
-2. Wait out the provider's **RPM** limit (sliding window, no busy-wait spin).
-3. Send the request. On failure, classify it:
-   - `rate_limit` → try the next model
-   - `quota_exhausted` → burn today's pool and skip the provider
-   - `auth` → skip the provider (bad key)
-   - `upstream` → try the next model
-4. Charge the daily pool with `tokens × weight` so the router knows when a provider is done for the day.
+```mermaid
+flowchart LR
+  A[chat request] --> B[fallback chain]
+  B --> C{provider ready?}
+  C -- no --> B
+  C -- yes --> D[RPM limiter]
+  D --> E[send request]
+  E --> F{status}
+  F -- 200 --> G[charge pool<br/>tokens x weight]
+  F -- 429 --> B
+  F -- 402 --> H[burn today's pool] --> B
+  F -- 401 --> I[skip provider] --> B
+  G --> J[answer]
+```
 
-## OpenCode plugin
+1. **Build a chain** — the preferred model of each provider first, then its other free models.
+2. **Wait out the RPM limit** — sliding window, no busy-wait spin.
+3. **Send, and classify the failure** — `rate_limit`, `quota_exhausted`, `auth`, `upstream`.
+4. **Charge the daily pool** with `tokens × weight`, so the router knows when a provider is done for the day.
+
+## What is actually free
+
+| Provider | Free models | The catch |
+|---|---|---|
+| **OpenCode Zen** | 10 | served only from inside OpenCode |
+| **GitHub Copilot** | 5 | ~50 premium requests/month; Claude is blocked on the free SKU |
+| **BeatAPI** | 5 | 1 request/min until you top up, 10/min after |
+| **APInex** | 9 | 10M tokens/day, spent as `tokens × weight` (2–4×) |
+| **Venice AI** | paid | Claude from $0.10/1M via x402 USDC — see [agent-x402](https://github.com/rustemmustafingovua-byte/agent-x402) |
+
+The registry refreshes itself every 6 hours (`npm run sync-models`), because free tiers change without notice.
+
+## Use it inside OpenCode
 
 ```jsonc
-// opencode.json
+// opencode.json — copy from examples/opencode.json
 {
   "provider": {
-    "apinex": { "npm": "@ai-sdk/openai-compatible", "options": { "baseURL": "https://api.apinex.bond/v1" } }
+    "apinex": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": { "baseURL": "https://api.apinex.bond/v1", "apiKey": "{env:APINEX_API_KEY}" },
+      "whitelist": ["free/qwen-3.8-max", "free/deepseek-v4-flash-0731"]
+    }
   }
 }
 ```
 
-Then point OpenCode at the models this package knows about — see `examples/opencode.json` in this repo for a complete, copy-pasteable configuration with 30 free models and zero paid ones.
+## Roadmap
+
+- [x] provider registry with limits, weights and preferred models
+- [x] RPM limiter and daily pool accounting
+- [x] fallback router with error classification
+- [x] CLI (`ofs`), tests, CI, npm publishing
+- [x] hourly model-registry refresh
+- [ ] OpenCode plugin that rewrites the model on 402/429 inside a live session
+- [ ] hosted registry API with an x402 price
+
+## Part of a portfolio
+
+| Project | What it does |
+|---|---|
+| [`opencode-free-stack`](https://github.com/rustemmustafingovua-byte/opencode-free-stack) | route to free models, fall back automatically |
+| [`free-web-mcp`](https://github.com/rustemmustafingovua-byte/free-web-mcp) | web search and page reading for agents, zero credits |
+| [`agent-x402`](https://github.com/rustemmustafingovua-byte/agent-x402) | pay per API call in USDC with a spend policy |
 
 ## Donate
 
-This project is MIT and stays free. If it saved you money, you can send USDC on **Base**:
+MIT and free forever. If it saved you money, send USDC on **Base**:
 
 ```
 0x8aC6a229f254980CCd3Dd35CF5E1B7c08880B40E
 ```
 
-Every donation goes straight into the project's own running costs (test API keys, CI, the hosted registry).
-
 ## Bounties
 
-Issues labelled `💰 Reward` can be funded by anyone with `/reward <amount>` (Opire) or via [Algora](https://algora.io). The bounty goes to the person whose PR gets merged — the repo owner never keeps it. That is deliberate: it buys contributors, reviews and stars.
-
-## Roadmap
-
-- [x] provider registry with limits, weights and preferred models
-- [x] RPM limiter + daily pool accounting
-- [x] fallback router with error classification
-- [x] CLI (`ofs`) and tests
-- [ ] OpenCode plugin that rewrites `model` on 402/429 automatically
-- [ ] hosted model registry (`GET /models.json`) refreshed hourly
-- [ ] adapters for more free providers
+Issues labelled `💰 Reward` can be funded by anyone with `/reward <amount>` (Opire) or via [Algora](https://algora.io). The reward goes to whoever's PR gets merged — never to the repo owner. That is the point: it buys contributors, reviews and stars.
 
 ## Contributing
 
 ```bash
 git clone https://github.com/rustemmustafingovua-byte/opencode-free-stack
-npm test
+npm install && npm test
 ```
 
-Adding a provider means one entry in `src/providers.js` — no other file changes.
+Adding a provider is one entry in [`src/providers.js`](src/providers.js) — no other file changes. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
 ## License
 
