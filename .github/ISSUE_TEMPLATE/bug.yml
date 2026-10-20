@@ -1,0 +1,21 @@
+name: 🐛 Bug
+description: Something in the router or registry behaves wrong.
+labels: ["🐛 Bug"]
+body:
+  - type: input
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Provider and model
+      description: Which provider/model produced the error?

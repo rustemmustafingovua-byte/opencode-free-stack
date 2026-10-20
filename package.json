@@ -1,0 +1,46 @@
+{
+  "name": "opencode-free-stack",
+  "version": "0.1.0",
+  "description": "Free-model stack for OpenCode: route requests to genuinely free models across providers, pace them to free-tier RPM limits, track daily quotas, and fall back automatically when one provider is empty.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "ofs": "bin/ofs.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "free",
+    "free-tier",
+    "llm",
+    "router",
+    "fallback",
+    "quota",
+    "ai-agents"
+  ],
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/",
+    "lint": "node --check src/index.js && node --check bin/ofs.js",
+    "sync-models": "node scripts/sync-models.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rustemmustafingovua-byte/opencode-free-stack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rustemmustafingovua-byte/opencode-free-stack/issues"
+  },
+  "homepage": "https://github.com/rustemmustafingovua-byte/opencode-free-stack#readme"
+}
