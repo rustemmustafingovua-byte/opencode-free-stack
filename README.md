@@ -35,16 +35,18 @@ An agent that picks one model and dies on a `402` is the most common way a "free
 ## Install
 
 ```bash
-npm install -g opencode-free-stack
+# tarball из релиза: без токена и без npm-логина
+npm i -g https://github.com/rustemmustafingovua-byte/opencode-free-stack/releases/download/v0.1.0/opencode-free-stack-0.1.0.tgz
 ```
+
+<details>
+<summary>Через GitHub Packages</summary>
 
 ```bash
-export OPENCODE_API_KEY=...   # OpenCode Zen
-export GITHUB_TOKEN=...        # GitHub Copilot
-export BEATAPI_API_KEY=...     # BeatAPI
-export APINEX_API_KEY=...      # APInex
+npm i -g @rustemmustafingovua-byte/opencode-free-stack --registry=https://npm.pkg.github.com
 ```
 
+</details>
 ## Quickstart
 
 ```bash
