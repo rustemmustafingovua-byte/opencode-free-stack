@@ -8,7 +8,7 @@
 set -euo pipefail
 
 OWNER="rustemmustafingovua-byte"
-VERSION="0.1.0"
+VERSION="${LUMEN_INSTALL_VERSION:-}"   # пусто = брать последний релиз
 REGISTRY="https://github.com/$OWNER"
 
 ALL="opencode-free-stack free-web-mcp agent-x402 mcp-doctor mcp-proxy tool-schema-lint prompt-budget agent-cost-guard opencode-doctor free-tier-tracker x402-priceboard prompt-injection-guard readme-doctor lumen-chain"
@@ -35,11 +35,18 @@ if ! command -v npm >/dev/null 2>&1; then
   exit 1
 fi
 
-echo "→ ставлю из $REGISTRY (v$VERSION):"
+echo "→ ставлю из $REGISTRY:"
 FAILED=""
 for p in $PKGS; do
-  url="$REGISTRY/$p/releases/download/v$VERSION/$p-$VERSION.tgz"
-  printf '  %-22s' "$p"
+  ver="$VERSION"
+  if [ -z "$ver" ]; then
+    # последний релиз из GitHub API
+    ver=$(curl -sf --max-time 15 "https://api.github.com/repos/$OWNER/$p/releases/latest" \
+      | sed -n 's/.*"tag_name": *"v\([0-9.]*\)".*/\1/p' | head -1)
+    [ -n "$ver" ] || ver="0.1.0"
+  fi
+  url="$REGISTRY/$p/releases/download/v$ver/$p-$ver.tgz"
+  printf '  %-22s v%-8s' "$p" "$ver"
   if npm i -g "$url" >/dev/null 2>&1; then
     echo "ok"
   else
@@ -51,7 +58,7 @@ done
 if [ -n "$FAILED" ]; then
   echo
   echo "не установились:$FAILED"
-  echo "поставь вручную: npm i -g https://github.com/$OWNER/<пакет>/releases/download/v$VERSION/<пакет>-$VERSION.tgz"
+  echo "поставь вручную: npm i -g https://github.com/$OWNER/<пакет>/releases/download/v<версия>/<пакет>-<версия>.tgz"
   exit 1
 fi
 
