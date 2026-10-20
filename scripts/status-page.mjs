@@ -31,6 +31,7 @@ const REPOS = [
   { slug: "x402-priceboard", desc: "Прайс-лист x402-эндпоинтов, без траты денег", group: "Контроль затрат" },
   { slug: "prompt-injection-guard", desc: "Поиск инструкций, спрятанных в файлах, которые читает агент", group: "Безопасность" },
   { slug: "readme-doctor", desc: "Почему никто не пользуется репозиторием — и что поправить", group: "Качество" },
+  { slug: "agent-browser-mcp", desc: "Настоящий браузер для агента: навигация, чтение, клики — с обходом защитных экранов по бюджету", group: "MCP" },
   { slug: "lumen-chain", desc: "PoS-цепь со своим рынком: P2P gossip, AMM, keeper через Uniswap V3", group: "Lumen" },
 ]
 

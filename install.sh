@@ -11,7 +11,7 @@ OWNER="rustemmustafingovua-byte"
 VERSION="${LUMEN_INSTALL_VERSION:-}"   # пусто = брать последний релиз
 REGISTRY="https://github.com/$OWNER"
 
-ALL="opencode-free-stack free-web-mcp agent-x402 mcp-doctor mcp-proxy tool-schema-lint prompt-budget agent-cost-guard opencode-doctor free-tier-tracker x402-priceboard prompt-injection-guard readme-doctor lumen-chain"
+ALL="opencode-free-stack agent-browser-mcp free-web-mcp agent-x402 mcp-doctor mcp-proxy tool-schema-lint prompt-budget agent-cost-guard opencode-doctor free-tier-tracker x402-priceboard prompt-injection-guard readme-doctor lumen-chain"
 
 ONLY=""
 while [ $# -gt 0 ]; do
@@ -68,3 +68,4 @@ echo "  mcp-doctor --help          диагностика MCP-конфигов"
 echo "  opencode-doctor --help     аудит установки opencode"
 echo "  tool-schema-lint --help    линтер схем инструментов"
 echo "  lumen explorer             состояние сети Lumen"
+echo "  agent-browser-mcp          настоящий браузер для агента (MCP)"
