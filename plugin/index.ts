@@ -14,8 +14,11 @@
  *   { "plugin": ["opencode-free-stack/plugin"] }
  */
 
+import { existsSync, readFileSync } from "node:fs"
+import { homedir } from "node:os"
+import { join } from "node:path"
 import { FreeRouter, PROVIDERS, fallbackChain } from "../src/index.js"
-import { isFreeTierFailure, reasonOf, nextModel } from "../src/fallback.js"
+import { isFreeTierFailure, reasonOf, nextModel, MAX_FALLBACKS } from "../src/fallback.js"
 
 // Внимание: OpenCode вызывает ЛЮБОЙ экспорт модуля как хук.
 // Поэтому наружу отдаём только сам плагин — вспомогательные функции импортируются, но не экспортируются.
@@ -26,6 +29,8 @@ export const OpencodeFreeStack = async ({ client }) => {
   const lastUserMessage = new Map()
   /** @type {Map<string, Set<string>>} */
   const tried = new Map()
+  /** @type {Map<string, Set<string>>} providers whose pool is empty for today */
+  const deadProviders = new Map()
   /** @type {Map<string, {provider: string, model: string}>} */
   const current = new Map()
 
@@ -57,8 +62,20 @@ export const OpencodeFreeStack = async ({ client }) => {
       set.add(`${model.providerID}/${model.modelID}`)
       tried.set(sessionID, set)
 
+      // the pool belongs to the provider: one 402 kills all of its models
+      if (/tokens\s+used|quota|balance/i.test(text)) {
+        const dead = deadProviders.get(sessionID) ?? new Set()
+        dead.add(model.providerID)
+        deadProviders.set(sessionID, dead)
+      }
+
+      if (set.size > MAX_FALLBACKS) {
+        console.error(`[opencode-free-stack] giving up after ${set.size} fallbacks`)
+        return
+      }
+
       const chain = fallbackChain(router.ready())
-      const next = nextModel(chain, model.providerID, model.modelID, set)
+      const next = nextModel(chain, model.providerID, model.modelID, set, deadProviders.get(sessionID))
       if (!next) {
         console.error(`[opencode-free-stack] no free model left (${reasonOf(text)})`)
         return
@@ -86,8 +103,21 @@ export const OpencodeFreeStack = async ({ client }) => {
   }
 }
 
+/**
+ * Resolve provider keys: environment first, then the secrets directory.
+ * The secrets fallback matters because a server started without the global
+ * .env (for example `opencode serve` in a fresh shell) would otherwise see no
+ * credentials at all.
+ */
 function keysFromEnv(env = process.env) {
   const keys = {}
+  const secretsDir = join(homedir(), ".config", "opencode", "secrets")
+  const files = {
+    apinex: "apinex.key",
+    copilot: "github.key",
+    beatapi: "beatapi.key",
+    venice: "venice.key",
+  }
   for (const p of Object.values(PROVIDERS)) {
     for (const name of p.env) {
       if (env[name]) {
@@ -95,6 +125,16 @@ function keysFromEnv(env = process.env) {
         break
       }
     }
+    if (keys[p.id]) continue
+    const file = files[p.id]
+    if (!file) continue
+    try {
+      const path = join(secretsDir, file)
+      if (existsSync(path)) {
+        const value = readFileSync(path, "utf8").trim()
+        if (value) keys[p.id] = value
+      }
+    } catch {}
   }
   return keys
 }

@@ -83,3 +83,27 @@ test("router reports every attempt when all providers fail", async () => {
     globalThis.fetch = original
   }
 })
+
+test("an exhausted provider is skipped entirely", async () => {
+  const { nextModel: nm } = await import("../src/fallback.js")
+  const chain = [
+    { provider: "apinex", model: "free/qwen-3.8-max" },
+    { provider: "apinex", model: "free/gemini-3.8-flash" },
+    { provider: "copilot", model: "gpt-4.1" },
+  ]
+  const dead = new Set(["apinex"])
+  const next = nm(chain, "apinex", "free/qwen-3.8-max", new Set(), dead)
+  assert.equal(next.provider, "copilot", "the whole dead provider must be skipped")
+})
+
+test("the next model is found even when the failed one is last in the chain", async () => {
+  const { nextModel: nm } = await import("../src/fallback.js")
+  const chain = [
+    { provider: "copilot", model: "gpt-4.1" },
+    { provider: "beatapi", model: "glm-5.3-free" },
+    { provider: "apinex", model: "free/qwen-3.8-max" },
+  ]
+  const next = nm(chain, "apinex", "free/qwen-3.8-max", new Set(), new Set(["apinex"]))
+  assert.equal(next.provider, "copilot", "must wrap around to the models before the failed one")
+  assert.equal(next.model, "gpt-4.1")
+})
