@@ -17,7 +17,8 @@
 import { FreeRouter, PROVIDERS, fallbackChain } from "../src/index.js"
 import { isFreeTierFailure, reasonOf, nextModel } from "../src/fallback.js"
 
-export { isFreeTierFailure, reasonOf, nextModel }
+// Внимание: OpenCode вызывает ЛЮБОЙ экспорт модуля как хук.
+// Поэтому наружу отдаём только сам плагин — вспомогательные функции импортируются, но не экспортируются.
 
 export const OpencodeFreeStack = async ({ client }) => {
   const router = new FreeRouter({ keys: keysFromEnv() })
