@@ -7,7 +7,7 @@
  *   node scripts/publish-queue.mjs
  */
 import { publish } from "./scaffold.mjs"
-import { appendFileSync, existsSync, writeFileSync } from "node:fs"
+import { appendFileSync, existsSync, writeFileSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { homedir } from "node:os"
 

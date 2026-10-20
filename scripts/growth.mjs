@@ -12,7 +12,23 @@ import { readFileSync, writeFileSync, appendFileSync, existsSync } from "node:fs
 import { homedir } from "node:os"
 import { join } from "node:path"
 
-const REPOS = ["opencode-free-stack", "agent-x402", "free-web-mcp"]
+const REPOS = [
+  "opencode-free-stack",
+  "free-web-mcp",
+  "agent-x402",
+  "mcp-doctor",
+  "mcp-proxy",
+  "tool-schema-lint",
+  "prompt-budget",
+  "agent-cost-guard",
+  "opencode-doctor",
+  "free-tier-tracker",
+  "x402-priceboard",
+  "prompt-injection-guard",
+  "readme-doctor",
+  "lumen-chain",
+]
+const ON_NPMJS = new Set(["mcp-doctor", "mcp-proxy", "agent-cost-guard", "readme-doctor"])
 const OWNER = "rustemmustafingovua-byte"
 
 const SECRETS = join(homedir(), ".config", "opencode", "secrets")
@@ -52,6 +68,9 @@ async function snapshot() {
     const issues = await gh(`/repos/${OWNER}/${name}/issues?state=open&per_page=50`)
     const open = (issues || []).filter((i) => !i.pull_request)
     const rel = await gh(`/repos/${OWNER}/${name}/releases/latest`)
+    const runs = await gh(`/repos/${OWNER}/${name}/actions/runs?per_page=5`)
+    const failed = (runs?.workflow_runs || []).filter((r) => r.conclusion === "failure").length
+    const npmStatus = ON_NPMJS.has(name) ? "npmjs" : "github-packages"
     rows.push({
       repo: name,
       stars: repo.stargazers_count,
@@ -61,6 +80,8 @@ async function snapshot() {
       lastPush: (repo.pushed_at || "").slice(0, 10),
       latestRelease: rel?.tag_name || null,
       topics: repo.topics || [],
+      ciFailed: failed,
+      registry: npmStatus,
     })
   }
   return rows
@@ -94,7 +115,7 @@ for (const r of rows) {
     continue
   }
   console.log(
-    `  ${r.repo.padEnd(24)} ★${String(r.stars).padEnd(5)} forks ${String(r.forks).padEnd(4)} issues ${String(r.openIssues).padEnd(4)} rel ${r.latestRelease || "-"}  push ${r.lastPush}`,
+    `  ${r.repo.padEnd(24)} ★${String(r.stars).padEnd(5)} forks ${String(r.forks).padEnd(4)} issues ${String(r.openIssues).padEnd(4)} rel ${r.latestRelease || "-"}  push ${r.lastPush}${r.ciFailed ? warn(`  CI провалов: ${r.ciFailed}`) : ""}`,
   )
   console.log(dim(`     topics: ${r.topics.join(", ") || "—"}`))
 }
