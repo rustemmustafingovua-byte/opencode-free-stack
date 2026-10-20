@@ -79,6 +79,14 @@ rows.push({
   next: "включить цену (X402_PRICE_USD) и забрать ETH на газ для сбора USDC",
 })
 
+// 1b. Платный API без газа: клиент платит сам, сервер только проверяет
+rows.push({
+  channel: "Платный API — способ без газа (работает при нуле)",
+  where: "клиент сам переводит USDC и шлёт X-PAYMENT-TX; сервер только читает сеть",
+  status: "реализовано и покрыто тестом",
+  next: "включить: X402_PRICE_USD=0.001 (газ платит плательщик, не мы)",
+})
+
 // 2. Lumen
 const lumenUrl = existsSync(join(STATE, "lumen-url.txt"))
   ? readFileSync(join(STATE, "lumen-url.txt"), "utf8").trim()
@@ -91,7 +99,7 @@ rows.push({
   status: lmnDeployed ? "контракты задеплоены" : "контракты не задеплоены",
   next: lmnDeployed
     ? "наполнить пул LMN/USDC и включить keeper"
-    : "закинуть ~0.01 ETH на газ → node scripts/deploy-lumen.mjs",
+    : "контракты требуют газа. Без газа Lumen остаётся open-source проектом: звёзды, спонсоры, баунти",
 })
 
 // 3. npmjs.org
