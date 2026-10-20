@@ -1,22 +1,16 @@
-name: 💰 Reward (fundable)
-description: Report a bug or request a feature. Anyone can fund it with /reward <amount> (Opire) or via Algora.
+name: 💰 Reward
+description: Anyone can fund this with "/reward <amount>" (Opire) or via Algora. The reward is paid to the merged PR, not to the repo owner.
 labels: ["💰 Reward"]
 body:
-  - type: input
-    id: problem
-    attributes:
-      label: Problem
-      description: What is broken or missing?
-    validations:
-      required: true
-  - type: textarea
-    id: repro
-    attributes:
-      label: Reproduction
-      description: Minimal steps or a code snippet.
   - type: input
     id: amount
     attributes:
       label: Suggested reward (USDC)
-      description: Optional. The reward is paid to whoever's PR gets merged — not to the repo owner.
-    placeholder: "25"
+      placeholder: "25"
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: What must be true for this to be done? Be specific.
+    validations:
+      required: true

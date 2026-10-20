@@ -1,28 +1,20 @@
 # Security policy
 
+## Reporting a vulnerability
+
+Use **Security → Report a vulnerability** on GitHub. Please do not open a public
+issue for a suspected flaw in the security-relevant code.
+
+## What this tool handles
+
+This tool reads local files or calls public APIs. It does not execute the content it reads.
+
+- no credentials are written to disk by the tool
+- keys come from the environment and are forwarded to the service that needs them
+- output from fetched pages is untrusted data, never instructions
+
 ## Supported versions
 
 | Version | Supported |
 |---|---|
 | 0.1.x | ✅ |
-
-## Reporting a vulnerability
-
-Open a private security advisory on GitHub
-(**Security → Report a vulnerability**) rather than a public issue.
-
-## What this project does with keys
-
-`opencode-free-stack` **never stores keys**. It reads them from the
-environment (`OPENCODE_API_KEY`, `GITHUB_TOKEN`, `BEATAPI_API_KEY`,
-`APINEX_API_KEY`) and forwards them to the provider you configured.
-
-- keys are never written to disk by this package
-- keys are never logged — error messages are truncated and never include headers
-- the registry (`models.json`) is public data fetched without credentials
-
-## Trust boundary
-
-The router decides *which provider* serves a request. It does not change the
-request body. If you let a model pick arbitrary providers, restrict the chain
-yourself with `providers: [...]` in `router.chat()`.

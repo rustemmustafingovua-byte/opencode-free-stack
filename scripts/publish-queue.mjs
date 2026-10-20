@@ -48,6 +48,13 @@ for (const [slug, topics, desc] of pending) {
         writeFileSync(DONE, JSON.stringify(done, null, 2))
       } catch {}
       log(`✓ ${slug}`)
+      // сразу засеваем issue для опубликованного репо
+      try {
+        const { execFileSync } = await import("node:child_process")
+        execFileSync("node", [join(homedir(), "workspace", "opencode-free-stack", "scripts", "seed-issues.mjs"), slug], {
+          stdio: "ignore",
+        })
+      } catch {}
     } catch (err) {
       const msg = String(err?.message ?? err).slice(0, 140)
       log(`  retry ${attempt} ${slug}: ${msg}`)
