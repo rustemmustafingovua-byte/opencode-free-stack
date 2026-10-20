@@ -143,12 +143,12 @@ for (const r of rows) {
 
 console.log(ok("  Итог:"))
 if (eth === 0n) {
-  console.log(
-    bad(
-      "    кошелёк пуст — платный API не сможет собирать USDC (нужен ETH на газ), а Lumen не задеплоится.",
-    ),
-  )
-  console.log(dim("    достаточно ~0.02 ETH в сети Base на адрес " + OWNER_WALLET))
+  console.log(bad("    на кошельке 0 ETH — поэтому всё сделано так, чтобы не тратить:"))
+  console.log(ok("     • платный API: газ платит клиент, сервер только проверяет транзакцию (работает при нуле)"))
+  console.log(ok("     • npmjs.org, GitHub Sponsors, USDC-донаты — бесплатные каналы"))
+  console.log(ok("     • баунти: деньги платит заказчик, а не мы"))
+  console.log(ok("     • Lumen — open-source проект: доход из звёзд, спонсоров и баунти"))
+  console.log(dim("    on-chain-часть Lumen (контракты, пул Uniswap) включается позже, когда появится газ"))
 } else {
   console.log(ok(`    ETH на газ есть (${formatUnits(eth, 18)}) — можно включать платный сбор и деплой Lumen`))
 }
