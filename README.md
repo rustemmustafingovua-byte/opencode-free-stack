@@ -116,6 +116,24 @@ The registry refreshes itself every 6 hours (`npm run sync-models`), because fre
 }
 ```
 
+## The plugin: fallback inside a live session
+
+The library and CLI are for your own code. The **plugin** is for OpenCode
+itself: it watches for `session.error`, recognises a free-tier failure
+(`402` pool exhausted, `429` rate limit) and continues the same turn with the
+next free model — no manual model switch, no lost work.
+
+```jsonc
+// opencode.json
+{
+  "plugin": ["opencode-free-stack/plugin"]
+}
+```
+
+```
+[opencode-free-stack] apinex/free/qwen-3.8-max → copilot/gpt-4.1 (daily pool exhausted)
+```
+
 ## Roadmap
 
 - [x] provider registry with limits, weights and preferred models
@@ -123,8 +141,9 @@ The registry refreshes itself every 6 hours (`npm run sync-models`), because fre
 - [x] fallback router with error classification
 - [x] CLI (`ofs`), tests, CI, npm publishing
 - [x] hourly model-registry refresh
-- [ ] OpenCode plugin that rewrites the model on 402/429 inside a live session
+- [x] OpenCode plugin that continues a turn on the next free model
 - [ ] hosted registry API with an x402 price
+- [ ] policy file to pin which providers may be used at all
 
 ## Part of a portfolio
 

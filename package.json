@@ -8,7 +8,8 @@
     "ofs": "bin/ofs.js"
   },
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./plugin": "./plugin/index.ts"
   },
   "engines": {
     "node": ">=20"
@@ -22,11 +23,14 @@
     "router",
     "fallback",
     "quota",
-    "ai-agents"
+    "ai-agents",
+    "plugin",
+    "opencode-plugin"
   ],
   "files": [
     "bin",
     "src",
+    "plugin",
     "README.md",
     "LICENSE"
   ],

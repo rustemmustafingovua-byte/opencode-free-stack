@@ -7,9 +7,12 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
-- OpenCode plugin that rewrites the model on 402/429 inside a live session
 - hosted registry API with an x402 price
 - adapters for more free providers (Groq, Cerebras, Google AI Studio, GitLab Duo, Cloudflare Workers AI)
+- policy file to pin which providers may be used at all
+
+### Fixed
+- OpenCode plugin: continues a turn with the next free model on `402`/`429`
 
 ## [0.1.0] - 2026-10-20
 
