@@ -22,7 +22,7 @@ test("walks the chain forward and skips models already tried", () => {
     { provider: "apinex", model: "free/deepseek-v4-pro-0813" },
     { provider: "copilot", model: "gpt-4.1" },
   ]
-  const tried = new Set()
+  const tried = new Set(["apinex/free/qwen-3.8-max"]) // the model that just failed
   const first = nextModel(chain, "apinex", "free/qwen-3.8-max", tried)
   assert.equal(first.key, "apinex/free/deepseek-v4-pro-0813")
 
