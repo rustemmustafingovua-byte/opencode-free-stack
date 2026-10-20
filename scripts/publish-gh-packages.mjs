@@ -19,6 +19,7 @@ const OWNER = "rustemmustafingovua-byte"
 
 const PACKAGES = [
   "opencode-free-stack",
+  "agent-browser-mcp",
   "free-web-mcp",
   "agent-x402",
   "mcp-doctor",

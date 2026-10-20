@@ -20,6 +20,7 @@ const OWNER = "rustemmustafingovua-byte"
 const ON_NPM = new Set(["mcp-doctor", "mcp-proxy", "agent-cost-guard", "readme-doctor"])
 const REPOS = [
   "opencode-free-stack",
+  "agent-browser-mcp",
   "free-web-mcp",
   "agent-x402",
   "mcp-doctor",
