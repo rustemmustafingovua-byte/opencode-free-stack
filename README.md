@@ -206,6 +206,7 @@ Thirteen MIT tools, one theme: making agent setups work, cheap and safe.
 |---|---|
 | [`opencode-free-stack`](https://github.com/rustemmustafingovua-byte/opencode-free-stack) | route to free models, fall back automatically |
 | [`free-web-mcp`](https://github.com/rustemmustafingovua-byte/free-web-mcp) | web search and page reading for agents, zero credits |
+| [`perps-funding-pulse`](https://github.com/rustemmustafingovua-byte/perps-funding-pulse) | live funding rates and open interest for perps, 0.001 USDC per call over x402 |
 | [`agent-x402`](https://github.com/rustemmustafingovua-byte/agent-x402) | pay per API call in USDC with a spend policy |
 | [`mcp-doctor`](https://github.com/rustemmustafingovua-byte/mcp-doctor) | check that MCP servers work, and say why they do not |
 | [`mcp-proxy`](https://github.com/rustemmustafingovua-byte/mcp-proxy) | one endpoint, many MCP servers, with keys and limits |
