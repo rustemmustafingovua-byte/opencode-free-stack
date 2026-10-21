@@ -156,7 +156,12 @@ for (const slug of PACKAGES) {
     console.log(ok(`  ✓ ${scoped}@${pkg.version}`))
     if (/warn/.test(out)) console.log(dim(out.trim().split("\n").slice(-2).join(" ")))
   } catch (e) {
-    console.log(bad(`  ✗ ${scoped}: ${String(e.stderr || e.message).split("\n").slice(0, 3).join(" ")}`))
+    const raw = `${String(e.stdout || "")}\n${String(e.stderr || "")}`
+    const errors = raw.split("\n").filter((l) => /npm error|\bE\d{3}\b|404|403|402/i.test(l))
+    const hint = errors.length
+      ? errors.slice(0, 2).join(" ").slice(0, 200)
+      : String(e.message).slice(0, 200)
+    console.log(bad(`  ✗ ${scoped}: ${hint}`))
   } finally {
     sh("rm", ["-rf", tmp])
   }
