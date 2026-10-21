@@ -32,6 +32,19 @@ Free AI tiers look generous until you actually use them. Every failure is one of
 
 An agent that picks one model and dies on a `402` is the most common way a "free AI" setup fails in production. This package removes that failure mode: it **knows every limit** and **moves the request to the next free model in the same turn**.
 
+## Buying from a paid MCP service (one command)
+
+`scripts/x402-buy.mjs` is a ready x402 client: it reads the payment terms from the
+402 response, pays with USDC **or native ETH** (the gas is the payer's, the server
+needs nothing), and retries the request with the proof.
+
+```bash
+X402_PRIVATE_KEY=0x… node scripts/x402-buy.mjs https://<host>/mcp/paid tools/list
+```
+
+The payee address comes from the 402 response — nothing is hardcoded, and the
+client works against any x402 service, not just ours.
+
 ## Try everything in one command
 
 ```bash
