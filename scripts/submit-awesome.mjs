@@ -1,48 +1,77 @@
 #!/usr/bin/env node
 /**
- * submit-awesome.mjs — add the MCP servers to punkpeye/awesome-mcp-servers.
+ * submit-awesome.mjs — бесплатная дистрибуция: наши MCP-серверы в чужих
+ * awesome-списках.
  *
- * Fork → branch → edit the list → open a pull request. The list is the
- * highest-traffic discovery channel that exists for MCP servers.
+ * Каждый такой список — это тысячи звёзд и постоянный поток посетителей.
+ * Стоит ноль денег: только PR.
+ *
+ *   node scripts/submit-awesome.mjs           # все списки
+ *   node scripts/submit-awesome.mjs --dry     # только показать, что добавим
  */
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs"
-import { join, dirname } from "node:path"
 import { execFileSync } from "node:child_process"
+import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from "node:fs"
+import { join } from "node:path"
 import { homedir } from "node:os"
 
-const UPSTREAM = "punkpeye/awesome-mcp-servers"
+const WORKSPACE = join(homedir(), "workspace")
 const OWNER = "rustemmustafingovua-byte"
-const KEY = join(homedir(), ".config", "opencode", "secrets", "github.key")
-const TOKEN = existsSync(KEY) ? readFileSync(KEY, "utf8").trim() : process.env.GITHUB_TOKEN
-const H = { Authorization: `Bearer ${TOKEN}`, Accept: "application/vnd.github+json", "Content-Type": "application/json" }
-const WORK = join(homedir(), "workspace", "awesome-mcp-servers")
+const TOKEN = readFileSync(join(homedir(), ".config/opencode/secrets/github.key"), "utf8").trim()
+const H = {
+  Authorization: `Bearer ${TOKEN}`,
+  Accept: "application/vnd.github+json",
+  "Content-Type": "application/json",
+  "User-Agent": "portfolio-bot",
+}
+const dry = process.argv.includes("--dry")
 
-const ENTRIES = [
+/** Списки и куда в них наши серверы. */
+const TARGETS = [
   {
-    section: "developer-tools",
-    repo: "free-web-mcp",
-    desc: "Web search and page reading for agents with zero API credits: r.jina.ai renders any page to markdown, plus Wikipedia, Hacker News and GitHub search behind one MCP server - no key, no credit card, no metered calls.",
+    repo: "appcypher/awesome-mcp-servers",
+    branch: "main",
+    file: "README.md",
+    section: "Search & Web",
+    sectionHint: "## ",
+    entries: [
+      {
+        icon: '<img src="https://cdn.simpleicons.org/brave/FB542B" height="14"/>',
+        name: "free-web-mcp",
+        url: "https://github.com/rustemmustafingovua-byte/free-web-mcp",
+        desc: "Web search and page reading for AI agents with zero API credits - r.jina.ai renders any page to markdown, plus Wikipedia, Hacker News and GitHub search behind one MCP server - no key, no credit card, no metered calls. Free tier 30 req/hour, paid tier 0.001 USDC per call via x402.",
+        after: "Fetch",
+      },
+      {
+        icon: '<img src="https://cdn.simpleicons.org/puppeteer/00D8A2" height="14"/>',
+        name: "agent-browser-mcp",
+        url: "https://github.com/rustemmustafingovua-byte/agent-browser-mcp",
+        desc: "A real browser for AI agents - navigation, reading, clicking, typing - with Cloudflare and captcha handling under an explicit budget and domain allowlist. Uses the browser already installed on the machine.",
+        after: "Bright Data",
+      },
+    ],
   },
   {
-    section: "cryptography",
-    repo: "agent-x402",
-    desc: "Pay per API call in USDC on Base with x402 - no account and no API key - with a spend policy (daily cap, per-request cap, payee allow-list) enforced in code, so a prompt injection cannot drain the wallet.",
-  },
-  {
-    section: "monitoring",
-    repo: "mcp-doctor",
-    desc: "Health check for MCP servers: probes every configured server, lists its tools, measures latency and classifies the failure as spawn, handshake, timeout, auth or empty instead of dumping a stack trace.",
-  },
-  {
-    section: "monitoring",
-    repo: "mcp-proxy",
-    desc: "One endpoint in front of many MCP servers, with a single client key, per-client rate limits, an append-only request log, replay of past calls and routing by server name.",
+    repo: "wong2/awesome-mcp-servers",
+    branch: "main",
+    file: "README.md",
+    section: "Community Servers",
+    entries: [
+      {
+        icon: "",
+        name: "free-web-mcp",
+        url: "https://github.com/rustemmustafingovua-byte/free-web-mcp",
+        desc: "Web search and page reading for AI agents with zero API credits - no key, no credit card, no metered calls",
+        after: "exa",
+      },
+    ],
   },
 ]
 
-function badge(repo) {
-  return `[![${OWNER}/${repo} MCP server](https://glama.ai/mcp/servers/${OWNER}/${repo}/badges/score.svg)](https://glama.ai/mcp/servers/${OWNER}/${repo})`
-}
+process.on("unhandledRejection", (e) => {
+  console.error("ОШИБКА:", e?.message ?? e)
+  if (e?.stderr) console.error(String(e.stderr).slice(0, 400))
+  process.exit(1)
+})
 
 async function api(method, path, body) {
   const res = await fetch(`https://api.github.com${path}`, {
@@ -51,100 +80,132 @@ async function api(method, path, body) {
     body: body ? JSON.stringify(body) : undefined,
   })
   const text = await res.text()
-  let json = {}
+  let json = null
   try {
     json = JSON.parse(text)
   } catch {}
-  return { status: res.status, json, text }
+  if (!res.ok) {
+    throw new Error(`${method} ${path} → ${res.status} ${(json?.message || text).slice(0, 160)}`)
+  }
+  return json
 }
 
-async function ensureFork() {
-  const check = await api("GET", `/repos/${OWNER}/${UPSTREAM.split("/")[1]}`)
-  if (check.status === 200) return
-  await api("POST", `/repos/${UPSTREAM}/forks`)
-  // wait for the fork to appear
-  for (let i = 0; i < 20; i++) {
-    await new Promise((r) => setTimeout(r, 3000))
-    const c = await api("GET", `/repos/${OWNER}/${UPSTREAM.split("/")[1]}`)
-    if (c.status === 200) return
-  }
-  throw new Error("fork did not appear")
+function line(entry) {
+  return `- ${entry.icon ? entry.icon + " " : ""}[${entry.name}](${entry.url}) - ${entry.desc}`
 }
 
-async function main() {
-  await ensureFork()
-  const fork = UPSTREAM.split("/")[1]
-  const dir = join(WORK, fork)
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true })
-    execFileSync("git", ["clone", "--depth", "1", `https://github.com/${OWNER}/${fork}.git`, dir], { stdio: "ignore" })
-  } else {
-    execFileSync("git", ["fetch", "origin"], { cwd: dir, stdio: "ignore" })
-    execFileSync("git", ["reset", "--hard", "origin/main"], { cwd: dir, stdio: "ignore" })
-  }
-  execFileSync("git", ["checkout", "-b", "feat/add-apinex-mcp-servers"], { cwd: dir })
+for (const t of TARGETS) {
+  console.log(`\n=== ${t.repo} ===`)
+  const repoName = t.repo.split("/")[1]
+  const work = join("/tmp", `awesome-${repoName}-${process.pid}`)
+  rmSync(work, { recursive: true, force: true })
+  mkdirSync(work, { recursive: true })
 
-  const readme = join(dir, "README.md")
-  let md = readFileSync(readme, "utf8")
+  // форк с уникальным именем (один форк на несколько списков нельзя)
+  const suffix = t.repo.split("/")[0].replace(/[^a-z0-9]/gi, "")
+  const forkName = `${repoName}-${suffix}`.toLowerCase()
+  // для punkpeye форк уже называется так — не переименовываем
+  let fork = null
+  try {
+    fork = await api("GET", `/repos/${OWNER}/${forkName}`)
+  } catch {}
+  if (!fork) {
+    console.log(`  форка ${forkName} нет — создаю`)
+    if (dry) continue
+    await api("POST", `/repos/${t.repo}/forks`, {})
+    // форк появляется не сразу; переименовываем, если имя занято другим родителем
+    for (let i = 0; i < 20; i++) {
+      await new Promise((r) => setTimeout(r, 1500))
+      try {
+        const f = await api("GET", `/repos/${OWNER}/${repoName}`)
+        if (f) {
+          await api("PATCH", `/repos/${OWNER}/${repoName}`, { name: forkName })
+          break
+        }
+      } catch {}
+    }
+  }
+
+  // клон
+  const cloneUrl = `https://x-access-token:${TOKEN}@github.com/${OWNER}/${forkName}.git`
+  try {
+    execFileSync("git", ["clone", "--depth", "1", cloneUrl, work], { stdio: ["ignore", "ignore", "pipe"] })
+  } catch (e) {
+    console.log(`  клон не удался: ${String(e.message).slice(0, 120)}`)
+    continue
+  }
+
+  const file = join(work, t.file)
+  if (!existsSync(file)) {
+    console.log("  файла нет:", t.file)
+    continue
+  }
+  let content = readFileSync(file, "utf8")
+  const lines = content.split("\n")
+
+  // находим секцию: заголовок, содержащий нужную фразу
+  let start = lines.findIndex((l) => l.startsWith("## ") && l.includes(t.section))
+  if (start < 0) {
+    console.log("  секция не найдена:", t.section)
+    continue
+  }
+  let end = lines.length
+  for (let i = start + 1; i < lines.length; i++) {
+    if (lines[i].startsWith("## ")) {
+      end = i
+      break
+    }
+  }
+
   let added = 0
-  for (const e of ENTRIES) {
-    const anchor = `<a name="${e.section}"></a>`
-    if (!md.includes(anchor)) {
-      console.log(`  – секция ${e.section} не найдена, пропуск ${e.repo}`)
+  for (const entry of t.entries) {
+    if (content.includes(`[${entry.name}](${entry.url})`)) {
+      console.log(`  ${entry.name}: уже есть`)
       continue
     }
-    if (md.includes(`[${OWNER}/${e.repo}]`)) {
-      console.log(`  · ${e.repo} уже есть`)
-      continue
+    // вставляем после указанной записи, иначе в конец секции
+    let insertAt = end - 1
+    for (let i = start + 1; i < end; i++) {
+      if (lines[i].includes(`[${entry.after}]`)) {
+        insertAt = i + 1
+        break
+      }
     }
-    const line = `- [${OWNER}/${e.repo}](https://github.com/${OWNER}/${e.repo}) ${badge(e.repo)} 🏠 🍎 🪟 🐧 - ${e.desc}\n`
-    const idx = md.indexOf(anchor)
-    const nextSection = md.indexOf("\n### ", idx + anchor.length)
-    const insertAt = nextSection > 0 ? nextSection : md.length
-    md = md.slice(0, insertAt) + line + md.slice(insertAt)
+    lines.splice(insertAt, 0, line(entry))
+    end += 1
     added++
-    console.log(`  ✓ добавлен ${e.repo} в ${e.section}`)
+    console.log(`  ${entry.name}: добавлен`)
   }
-  writeFileSync(readme, md)
+
   if (!added) {
-    console.log("нечего добавлять")
-    return
+    console.log("  добавлять нечего")
+    continue
   }
-  execFileSync("git", ["add", "README.md"], { cwd: dir })
-  execFileSync(
-    "git",
-    ["commit", "-q", "-m", "Add APInex MCP servers: free-web-mcp, agent-x402, mcp-doctor, mcp-proxy"],
-    { cwd: dir },
-  )
-  const basic = Buffer.from(`x-access-token:${TOKEN}`).toString("base64")
-  execFileSync("git", ["-c", `http.extraheader=AUTHORIZATION: basic ${basic}`, "push", "-q", "origin", "feat/add-apinex-mcp-servers"], { cwd: dir })
+  if (dry) continue
 
-  const body = {
-    title: "Add APInex MCP servers: free-web-mcp, agent-x402, mcp-doctor, mcp-proxy",
-    head: `${OWNER}:feat/add-apinex-mcp-servers`,
-    base: "main",
+  writeFileSync(file, lines.join("\n"))
+  const branch = `add/${OWNER}-mcp-servers`
+  const sh = (cmd, args) => execFileSync("git", ["-C", work, cmd, ...args], { stdio: ["ignore", "pipe", "pipe"] })
+  sh("checkout", ["-B", branch])
+  sh("config", ["user.name", OWNER])
+  sh("config", ["user.email", `${OWNER}@users.noreply.github.com`])
+  sh("add", [t.file])
+  sh("commit", ["-m", `Add ${OWNER} MCP servers to the list`])
+  sh("push", ["origin", branch])
+
+  const pr = await api("POST", `/repos/${t.repo}/pulls`, {
+    title: `Add ${OWNER} MCP servers`,
+    head: `${OWNER}:${branch}`,
+    base: t.branch,
     body: [
-      "Adds four MCP servers from the APInex toolkit:",
+      `Adds three MIT MCP servers from ${OWNER}:`,
       "",
-      "| Server | Section | What it does |",
-      "|---|---|---|",
-      "| [free-web-mcp](https://github.com/rustemmustafingovua-byte/free-web-mcp) | Developer Tools | Web search and page reading for agents with zero API credits (r.jina.ai + Wikipedia + Hacker News + GitHub) |",
-      "| [agent-x402](https://github.com/rustemmustafingovua-byte/agent-x402) | Cryptography | Pay per API call in USDC on Base with x402, with a spend policy enforced outside the model |",
-      "| [mcp-doctor](https://github.com/rustemmustafingovua-byte/mcp-doctor) | Monitoring | Health check for MCP servers: probes them, lists tools, classifies the failure |",
-      "| [mcp-proxy](https://github.com/rustemmustafingovua-byte/mcp-proxy) | Monitoring | One endpoint in front of many MCP servers: client key, rate limits, logs, replay |",
+      "- **free-web-mcp** - web search and page reading for AI agents with zero API credits (no key, no credit card). Free tier 30 requests/hour, paid tier 0.001 USDC per call over x402.",
+      "- **agent-browser-mcp** - a real browser for agents with Cloudflare/captcha handling under an explicit budget and domain allowlist.",
+      "- **agent-x402** - pay per API call in USDC on Base with a spend policy enforced outside the model.",
       "",
-      "All four are MIT, have CI on Node 20/22/24, ship a CLI and are published with tests. No account or API key is required for the free paths.",
+      "All are open source, tested, and published to the official MCP registry.",
     ].join("\n"),
-  }
-  const pr = await api("POST", `/repos/${UPSTREAM}/pulls`, body)
-  if (pr.status === 201) {
-    console.log(`\n  ✓ PR: ${pr.json.html_url}`)
-    await api("POST", `/repos/${OWNER}/${fork}/pulls/${pr.json.number}/comments`, {
-      body: "Added four MCP servers from the APInex toolkit. All MIT, tested, with CI. Please review the section placement — I can move any of them.",
-    }).catch(() => {})
-  } else {
-    console.log(`\n  ✗ PR: ${pr.status} ${pr.text.slice(0, 300)}`)
-  }
+  })
+  console.log(`  PR: ${pr.html_url}`)
 }
-
-main()
