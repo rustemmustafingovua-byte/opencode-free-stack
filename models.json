@@ -1,38 +1,13 @@
 {
-  "generatedAt": "2026-10-21T04:40:27.288Z",
+  "generatedAt": "2026-10-21T11:42:57.586Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "nemotron-3-ultra-free",
-          "name": "Nemotron 3 Ultra Free",
-          "context": 1000000
-        },
-        {
-          "id": "beam-free",
-          "name": "Beam Free",
-          "context": 1048576
-        },
-        {
-          "id": "minimax-m3.1-flash-free",
-          "name": "MiniMax M3.1 Flash Free",
-          "context": 1000000
-        },
-        {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
-          "context": 1048576
-        },
-        {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
-        },
-        {
-          "id": "big-pickle",
-          "name": "Big Pickle",
+          "id": "deepseek-v4.1-flash-free",
+          "name": "DeepSeek V4.1 Flash Free",
           "context": 200000
         },
         {
@@ -46,13 +21,38 @@
           "context": 200000
         },
         {
+          "id": "nemotron-3-ultra-free",
+          "name": "Nemotron 3 Ultra Free",
+          "context": 1000000
+        },
+        {
           "id": "longcat-2.5-preview-free",
           "name": "LongCat 2.5 Preview Free",
           "context": 1000000
         },
         {
-          "id": "deepseek-v4.1-flash-free",
-          "name": "DeepSeek V4.1 Flash Free",
+          "id": "beam-free",
+          "name": "Beam Free",
+          "context": 1048576
+        },
+        {
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
+          "context": 262144
+        },
+        {
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
+          "context": 1048576
+        },
+        {
+          "id": "minimax-m3.1-flash-free",
+          "name": "MiniMax M3.1 Flash Free",
+          "context": 1000000
+        },
+        {
+          "id": "big-pickle",
+          "name": "Big Pickle",
           "context": 200000
         }
       ]
