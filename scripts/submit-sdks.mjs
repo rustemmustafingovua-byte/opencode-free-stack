@@ -178,7 +178,7 @@ sh("config", ["user.name", OWNER])
 sh("config", ["user.email", `${OWNER}@users.noreply.github.com`])
 sh("add", [TARGET.file])
 sh("commit", ["-m", `Add ${OWNER} agent tooling (MCP servers, cost control, browser)`])
-sh("push", ["origin", branch])
+sh("push", ["--force", "origin", branch])
 
 const pr = await api("POST", `/repos/${TARGET.repo}/pulls`, {
   title: `Add ${OWNER} agent tooling`,

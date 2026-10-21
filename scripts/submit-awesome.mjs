@@ -191,7 +191,7 @@ for (const t of TARGETS) {
   sh("config", ["user.email", `${OWNER}@users.noreply.github.com`])
   sh("add", [t.file])
   sh("commit", ["-m", `Add ${OWNER} MCP servers to the list`])
-  sh("push", ["origin", branch])
+  sh("push", ["--force", "origin", branch])
 
   const pr = await api("POST", `/repos/${t.repo}/pulls`, {
     title: `Add ${OWNER} MCP servers`,
