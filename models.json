@@ -1,29 +1,19 @@
 {
-  "generatedAt": "2026-10-23T04:44:05.330Z",
+  "generatedAt": "2026-10-23T11:33:15.281Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "big-pickle",
-          "name": "Big Pickle",
-          "context": 200000
-        },
-        {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
+          "id": "beam-free",
+          "name": "Beam Free",
           "context": 1048576
         },
         {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
-        },
-        {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
-          "context": 262144
+          "id": "big-pickle",
+          "name": "Big Pickle",
+          "context": 200000
         },
         {
           "id": "deepseek-v4.1-flash-free",
@@ -31,14 +21,9 @@
           "context": 200000
         },
         {
-          "id": "beam-free",
-          "name": "Beam Free",
-          "context": 1048576
-        },
-        {
-          "id": "glm-5.3-flash-free",
-          "name": "GLM-5.3-Flash Free",
-          "context": 200000
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
+          "context": 262144
         },
         {
           "id": "mimo-v2.6-flash-free",
@@ -46,9 +31,24 @@
           "context": 200000
         },
         {
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
+          "context": 262144
+        },
+        {
           "id": "nemotron-3-ultra-free",
           "name": "Nemotron 3 Ultra Free",
           "context": 1000000
+        },
+        {
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
+          "context": 1048576
+        },
+        {
+          "id": "glm-5.3-flash-free",
+          "name": "GLM-5.3-Flash Free",
+          "context": 200000
         }
       ]
     },
