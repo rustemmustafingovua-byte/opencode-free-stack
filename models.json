@@ -1,19 +1,34 @@
 {
-  "generatedAt": "2026-10-25T04:35:53.627Z",
+  "generatedAt": "2026-10-25T11:19:45.549Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
+          "id": "glm-5.3-flash-free",
+          "name": "GLM-5.3-Flash Free",
+          "context": 200000
+        },
+        {
+          "id": "big-pickle",
+          "name": "Big Pickle",
+          "context": 200000
+        },
+        {
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
+          "context": 262144
+        },
+        {
           "id": "nemotron-3.5-super-vl-free",
           "name": "Nemotron 3.5 Super VL Free",
           "context": 1048576
         },
         {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
+          "id": "nemotron-3-ultra-free",
+          "name": "Nemotron 3 Ultra Free",
+          "context": 1000000
         },
         {
           "id": "deepseek-v4.1-flash-free",
@@ -26,29 +41,14 @@
           "context": 1048576
         },
         {
-          "id": "nemotron-3-ultra-free",
-          "name": "Nemotron 3 Ultra Free",
-          "context": 1000000
-        },
-        {
-          "id": "glm-5.3-flash-free",
-          "name": "GLM-5.3-Flash Free",
-          "context": 200000
-        },
-        {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
-          "context": 262144
-        },
-        {
-          "id": "big-pickle",
-          "name": "Big Pickle",
-          "context": 200000
-        },
-        {
           "id": "mimo-v2.6-flash-free",
           "name": "MiMo-V2.6-Flash Free",
           "context": 200000
+        },
+        {
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
+          "context": 262144
         }
       ]
     },
