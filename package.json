@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/rustemmustafingovua-byte/opencode-free-stack#readme",
   "dependencies": {
-    "viem": "^2.57.7"
+    "viem": "^2.57.11"
   },
   "funding": {
     "custom": [
