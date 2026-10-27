@@ -24,8 +24,7 @@
     "fallback",
     "quota",
     "ai-agents",
-    "plugin",
-    "opencode-plugin"
+    "plugin"
   ],
   "files": [
     "bin",

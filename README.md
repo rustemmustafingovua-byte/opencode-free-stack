@@ -1,265 +1,58 @@
 <div align="center">
 
-<img src="docs/social-preview.png" alt="opencode-free-stack" width="100%">
+# Opencode Free Stack
 
-# opencode-free-stack
-
-**Free-model stack for [OpenCode](https://opencode.ai) — route every request to a model that costs $0, fall back automatically when a provider runs dry, and keep an eye on your daily quotas.**
-
-[![CI](https://github.com/rustemmustafingovua-byte/opencode-free-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/rustemmustafingovua-byte/opencode-free-stack/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/opencode-free-stack?color=cb3837&logo=npm)](https://www.npmjs.com/package/opencode-free-stack)
-[![license](https://img.shields.io/badge/license-MIT-8b949e?logo=opensourceinitiative)](./LICENSE)
-[![node](https://img.shields.io/badge/node-%3E%3D20-3c873a?logo=node.js)](https://nodejs.org)
-[![paid](https://img.shields.io/badge/USDC-0x8aC6a229f254980CCd3Dd35CF5E1B7c08880B40E-2775ca?logo=ethereum)](https://base.org)
-[![docs](https://img.shields.io/badge/docs-GitHub%20Pages-58a6ff)](https://rustemmustafingovua-byte.github.io/opencode-free-stack/)
-
-[**Docs**](https://rustemmustafingovua-byte.github.io/opencode-free-stack/) · [Strategy](STRATEGY.md) · [Launch kit](LAUNCH.md) · [Issues](https://github.com/rustemmustafingovua-byte/opencode-free-stack/issues) · [Discussions](https://github.com/rustemmustafingovua-byte/opencode-free-stack/discussions)
+[![CI](https://github.com/rustemmustafingovua-byte/opencode-free-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/rustemmustafingovua-byte/opencode-free-stack/actions/workflows/ci.yml) [![npm](https://img.shields.io/npm/v/opencode-free-stack?color=cb3837&logo=npm)](https://www.npmjs.com/package/opencode-free-stack) [![license](https://img.shields.io/badge/license-MIT-8b949e?logo=opensourceinitiative)](./LICENSE)
 
 </div>
 
 ---
 
-## The problem
+**Free-model stack for OpenCode — route every request to a model that costs $0, fall back automatically when a provider runs dry, and keep an eye on your daily quotas.**
 
-Free AI tiers look generous until you actually use them. Every failure is one of three limit systems:
+---
 
-| Limit | What it looks like | Which providers do it |
-|
+⭐ **Star us on GitHub** if this project helps you build better agents!
 
-⭐ **Star us on GitHub** — it helps others find the project.
----|---|---|
-| **RPM** | `429 Rate limit exceeded` | all of them |
-| **Daily token pool** | `402 Free 10M tokens used` | APInex (10M/day) |
-| **Model weight** | the pool drains 2–4× faster than the token count suggests | APInex (`weight` 1–4) |
-| **Plan gate** | `only available with a subscription` | APInex (Claude, Kimi, GLM Pro) |
+---
 
-An agent that picks one model and dies on a `402` is the most common way a "free AI" setup fails in production. This package removes that failure mode: it **knows every limit** and **moves the request to the next free model in the same turn**.
-
-## Buying from a paid MCP service (one command)
-
-`scripts/x402-buy.mjs` is a ready x402 client: it reads the payment terms from the
-402 response, pays with USDC **or native ETH** (the gas is the payer's, the server
-needs nothing), and retries the request with the proof.
-
-```bash
-X402_PRIVATE_KEY=0x… node scripts/x402-buy.mjs https://<host>/mcp/paid tools/list
-```
-
-The payee address comes from the 402 response — nothing is hardcoded, and the
-client works against any x402 service, not just ours.
-
-## Try everything in one command
-
-```bash
-bash demo.sh          # все тесты + все инструменты одной прогонкой
-bash demo.sh --live   # плюс проверка живых сервисов
-```
-
-## Quick Start
-
-```bash
-git clone https://github.com/rustemmustafingovua-byte/opencode-free-stack.git
-cd opencode-free-stack && npm install
-npm test
-```
-
-## Install everything (one command)
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/rustemmustafingovua-byte/opencode-free-stack/main/install.sh | bash
-```
-
-No npm login, no token — every CLI installs from its release tarball.
-Pick a subset with `--only mcp-doctor,free-web-mcp`.
-
-## Install
-
-```bash
-# tarball из релиза: без токена и без npm-логина
-npm i -g https://github.com/rustemmustafingovua-byte/opencode-free-stack/releases/download/v0.1.0/opencode-free-stack-0.1.0.tgz
-```
-
-<details>
-<summary>Через GitHub Packages (нужен токен со scope read:packages)</summary>
-
-```bash
-npm i -g @rustemmustafingovua-byte/opencode-free-stack --registry=https://npm.pkg.github.com
-```
-
-</details>
-## Quickstart
-
-```bash
-ofs models            # every known free model, grouped by provider
-ofs status            # which providers are configured, how much quota is left
-ofs chain             # the exact fallback order that would be used
-ofs route "explain quicksort"   # send one prompt through the chain
-```
-
-```js
-import { routerFromEnv } from "opencode-free-stack"
-
-const router = routerFromEnv()
-const res = await router.chat([{ role: "user", content: "hi" }])
-
-if (res.ok) {
-  console.log(res.provider, res.model, res.content)
-} else {
-  console.error(res.attempts)   // why every provider refused
-}
-```
-
-## How it works
-
-```mermaid
-flowchart LR
-  A[chat request] --> B[fallback chain]
-  B --> C{provider ready?}
-  C -- no --> B
-  C -- yes --> D[RPM limiter]
-  D --> E[send request]
-  E --> F{status}
-  F -- 200 --> G[charge pool<br/>tokens x weight]
-  F -- 429 --> B
-  F -- 402 --> H[burn today's pool] --> B
-  F -- 401 --> I[skip provider] --> B
-  G --> J[answer]
-```
-
-1. **Build a chain** — the preferred model of each provider first, then its other free models.
-2. **Wait out the RPM limit** — sliding window, no busy-wait spin.
-3. **Send, and classify the failure** — `rate_limit`, `quota_exhausted`, `auth`, `upstream`.
-4. **Charge the daily pool** with `tokens × weight`, so the router knows when a provider is done for the day.
-
-## What is actually free
-
-| Provider | Free models | The catch |
-|---|---|---|
-| **OpenCode Zen** | 10 | served only from inside OpenCode |
-| **GitHub Copilot** | 5 | ~50 premium requests/month; Claude is blocked on the free SKU |
-| **BeatAPI** | 5 | 1 request/min until you top up, 10/min after |
-| **APInex** | 9 | 10M tokens/day, spent as `tokens × weight` (2–4×) |
-| **Venice AI** | paid | Claude from $0.10/1M via x402 USDC — see [agent-x402](https://github.com/rustemmustafingovua-byte/agent-x402) |
-
-The registry refreshes itself every 6 hours (`npm run sync-models`), because free tiers change without notice.
-
-## Use it inside OpenCode
-
-```jsonc
-// opencode.json — copy from examples/opencode.json
-{
-  "provider": {
-    "apinex": {
-      "npm": "@ai-sdk/openai-compatible",
-      "options": { "baseURL": "https://api.apinex.bond/v1", "apiKey": "{env:APINEX_API_KEY}" },
-      "whitelist": ["free/qwen-3.8-max", "free/deepseek-v4-flash-0731"]
-    }
-  }
-}
-```
-
-## The plugin: fallback inside a live session
-
-The library and CLI are for your own code. The **plugin** is for OpenCode
-itself: it watches for `session.error`, recognises a free-tier failure
-(`402` pool exhausted, `429` rate limit) and continues the same turn with the
-next free model — no manual model switch, no lost work.
-
-```jsonc
-// opencode.json
-{
-  "plugin": ["opencode-free-stack/plugin"]
-}
-```
-
-```
-[opencode-free-stack] apinex/free/qwen-3.8-max → copilot/gpt-4.1 (daily pool exhausted)
-```
-
-## Roadmap
-
-- [x] provider registry with limits, weights and preferred models
-- [x] RPM limiter and daily pool accounting
-- [x] fallback router with error classification
-- [x] CLI (`ofs`), tests, CI, npm publishing
-- [x] hourly model-registry refresh
-- [x] OpenCode plugin that continues a turn on the next free model
-- [ ] hosted registry API with an x402 price
-- [ ] policy file to pin which providers may be used at all
-
-## CLI
-
-```
-ofs — Free-model router for OpenCode.
-
-USAGE
-  ofs models
-  ofs status
-  ofs chain
-  ofs route "explain quicksort"
-
-COMMANDS / OPTIONS
-  models          list every known free model, grouped by provider
-  status          which providers are configured and how much quota is left
-  chain           print the fallback order that would be used
-  route <prompt>  send one prompt through the fallback chain
-
-Environment: OPENCODE_API_KEY, GITHUB_TOKEN, BEATAPI_API_KEY, APINEX_API_KEY
-
-MIT · https://github.com/rustemmustafingovua-byte
-```
-
-## Part of a portfolio
-
-Thirteen MIT tools, one theme: making agent setups work, cheap and safe.
-
-| Project | What it does |
-|---|---|
-| [`opencode-free-stack`](https://github.com/rustemmustafingovua-byte/opencode-free-stack) | route to free models, fall back automatically |
-| [`free-web-mcp`](https://github.com/rustemmustafingovua-byte/free-web-mcp) | web search and page reading for agents, zero credits |
-| [`perps-funding-pulse`](https://github.com/rustemmustafingovua-byte/perps-funding-pulse) | live funding rates and open interest for perps, 0.001 USDC per call over x402 |
-| [`agent-x402`](https://github.com/rustemmustafingovua-byte/agent-x402) | pay per API call in USDC with a spend policy |
-| [`mcp-doctor`](https://github.com/rustemmustafingovua-byte/mcp-doctor) | check that MCP servers work, and say why they do not |
-| [`mcp-proxy`](https://github.com/rustemmustafingovua-byte/mcp-proxy) | one endpoint, many MCP servers, with keys and limits |
-| [`tool-schema-lint`](https://github.com/rustemmustafingovua-byte/tool-schema-lint) | lint MCP tool schemas before agents misuse them |
-| [`prompt-budget`](https://github.com/rustemmustafingovua-byte/prompt-budget) | what does your system prompt cost per request? |
-| [`agent-cost-guard`](https://github.com/rustemmustafingovua-byte/agent-cost-guard) | a budget in front of any OpenAI-compatible endpoint |
-| [`opencode-doctor`](https://github.com/rustemmustafingovua-byte/opencode-doctor) | audit an OpenCode install in one command |
-| [`free-tier-tracker`](https://github.com/rustemmustafingovua-byte/free-tier-tracker) | know your free quota before it runs out |
-| [`x402-priceboard`](https://github.com/rustemmustafingovua-byte/x402-priceboard) | the price list of x402 endpoints, without paying |
-| [`prompt-injection-guard`](https://github.com/rustemmustafingovua-byte/prompt-injection-guard) | find instructions hidden in files the agent reads itself |
-| [`readme-doctor`](https://github.com/rustemmustafingovua-byte/readme-doctor) | why nobody uses your repository — checked in one command |
-
-## Donate
-
-MIT and free forever. If it saved you money, send USDC on **Base**:
-
-```
-0x8aC6a229f254980CCd3Dd35CF5E1B7c08880B40E
-```
-
-## Bounties
-
-Issues labelled `💰 Reward` can be funded by anyone with `/reward <amount>` (Opire) or via [Algora](https://algora.io). The reward goes to whoever's PR gets merged — never to the repo owner. That is the point: it buys contributors, reviews and stars.
-
-## Contributing
+## 🚀 Быстрый старт
 
 ```bash
 git clone https://github.com/rustemmustafingovua-byte/opencode-free-stack
-npm install && npm test
+cd opencode-free-stack && npm install
+opencode-free-stack models
 ```
 
-Adding a provider is one entry in [`src/providers.js`](src/providers.js) — no other file changes. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
+---
 
-## Support
+## 🎯 Демо
 
-Every tool here is MIT and free. If it saved you time, you can support the work:
+```bash
+opencode-free-stack models
+opencode-free-stack status
+opencode-free-stack route "привет"
+```
 
-- **USDC (Base):** `0x8aC6a229f254980CCd3Dd35CF5E1B7c08880B40E`
-- **GitHub Sponsors:** https://github.com/sponsors/rustemmustafingovua-byte
+---
 
-Paid tiers of the hosted services are billed per call in USDC (x402) — no accounts, no keys.
+## 💰 Монетизация
 
-## License
+- **Custom provider plugins**: создание плагинов для новых free-tier провайдеров
+- **Managed routing**: hosted-версия роутера для команд с SLA
+- **Enterprise support**: приоритетная поддержка и кастомизация fallback-логики
+- **Training & workshops**: обучение команд работе с free-tier AI-инфраструктурой
+
+---
+
+## Contributing
+
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feat/amazing-thing`)
+3. Commit your changes (`git commit -m 'feat: add amazing thing'`)
+4. Push to the branch (`git push origin feat/amazing-thing`)
+5. Open a Pull Request
+
+Bug reports and feature requests are welcome on the [Issues](https://github.com/rustemmustafingovua-byte/opencode-free-stack/issues) page.
 
 MIT © rustemmustafingovua-byte
