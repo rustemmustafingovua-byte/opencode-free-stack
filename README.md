@@ -24,7 +24,10 @@
 Free AI tiers look generous until you actually use them. Every failure is one of three limit systems:
 
 | Limit | What it looks like | Which providers do it |
-|---|---|---|
+|
+
+⭐ **Star us on GitHub** — it helps others find the project.
+---|---|---|
 | **RPM** | `429 Rate limit exceeded` | all of them |
 | **Daily token pool** | `402 Free 10M tokens used` | APInex (10M/day) |
 | **Model weight** | the pool drains 2–4× faster than the token count suggests | APInex (`weight` 1–4) |
@@ -50,6 +53,14 @@ client works against any x402 service, not just ours.
 ```bash
 bash demo.sh          # все тесты + все инструменты одной прогонкой
 bash demo.sh --live   # плюс проверка живых сервисов
+```
+
+## Quick Start
+
+```bash
+git clone https://github.com/rustemmustafingovua-byte/opencode-free-stack.git
+cd opencode-free-stack && npm install
+npm test
 ```
 
 ## Install everything (one command)
