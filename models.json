@@ -1,24 +1,29 @@
 {
-  "generatedAt": "2026-10-29T12:54:48.957Z",
+  "generatedAt": "2026-10-29T22:42:18.874Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
-          "context": 1048576
-        },
-        {
           "id": "beam-free",
           "name": "Beam Free",
           "context": 1048576
         },
         {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
+          "id": "big-pickle",
+          "name": "Big Pickle",
+          "context": 200000
+        },
+        {
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
           "context": 262144
+        },
+        {
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
+          "context": 1048576
         },
         {
           "id": "mimo-v2.6-flash-free",
@@ -31,13 +36,8 @@
           "context": 200000
         },
         {
-          "id": "big-pickle",
-          "name": "Big Pickle",
-          "context": 200000
-        },
-        {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
           "context": 262144
         },
         {
@@ -52,6 +52,12 @@
       "baseURL": "https://api.apinex.bond/v1",
       "freeDailyTokens": 10000000,
       "free": [
+        {
+          "id": "free/gemini-3.8-flash",
+          "name": "Gemini 3.8 Flash",
+          "weight": 3,
+          "context": "1M"
+        },
         {
           "id": "free/qwen-3.8-max",
           "name": "Qwen 3.8 MAX",
@@ -92,12 +98,6 @@
           "id": "free/glm-5.3",
           "name": "GLM 5.3",
           "weight": 4,
-          "context": "1M"
-        },
-        {
-          "id": "free/gemini-3.8-flash",
-          "name": "Gemini 3.8 Flash",
-          "weight": 3,
           "context": "1M"
         },
         {
