@@ -1,24 +1,44 @@
 {
-  "generatedAt": "2026-11-03T23:16:26.729Z",
+  "generatedAt": "2026-11-04T06:10:28.385Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "crouton-alpha-free",
-          "name": "Crouton Alpha Free",
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
           "context": 1048576
         },
         {
-          "id": "glm-5.3-flash-free",
-          "name": "GLM-5.3-Flash Free",
+          "id": "deepseek-v4.1-flash-free",
+          "name": "DeepSeek V4.1 Flash Free",
           "context": 200000
+        },
+        {
+          "id": "big-pickle",
+          "name": "Big Pickle",
+          "context": 200000
+        },
+        {
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
+          "context": 262144
         },
         {
           "id": "pulse-alpha-free",
           "name": "Pulse Alpha Free",
           "context": 1048576
+        },
+        {
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
+          "context": 262144
+        },
+        {
+          "id": "glm-5.3-flash-free",
+          "name": "GLM-5.3-Flash Free",
+          "context": 200000
         },
         {
           "id": "beam-free",
@@ -31,29 +51,9 @@
           "context": 200000
         },
         {
-          "id": "deepseek-v4.1-flash-free",
-          "name": "DeepSeek V4.1 Flash Free",
-          "context": 200000
-        },
-        {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
+          "id": "crouton-alpha-free",
+          "name": "Crouton Alpha Free",
           "context": 1048576
-        },
-        {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
-        },
-        {
-          "id": "big-pickle",
-          "name": "Big Pickle",
-          "context": 200000
-        },
-        {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
-          "context": 262144
         }
       ]
     },
