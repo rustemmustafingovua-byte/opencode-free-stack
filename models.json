@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-04T23:37:28.011Z",
+  "generatedAt": "2026-11-05T06:38:40.145Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
@@ -11,8 +11,8 @@
           "context": 200000
         },
         {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
           "context": 262144
         },
         {
@@ -21,18 +21,13 @@
           "context": 200000
         },
         {
-          "id": "crouton-alpha-free",
-          "name": "Crouton Alpha Free",
-          "context": 1048576
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
+          "context": 262144
         },
         {
           "id": "beam-free",
           "name": "Beam Free",
-          "context": 1048576
-        },
-        {
-          "id": "pulse-alpha-free",
-          "name": "Pulse Alpha Free",
           "context": 1048576
         },
         {
@@ -41,8 +36,8 @@
           "context": 200000
         },
         {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
+          "id": "crouton-alpha-free",
+          "name": "Crouton Alpha Free",
           "context": 1048576
         },
         {
@@ -51,9 +46,14 @@
           "context": 200000
         },
         {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
+          "context": 1048576
+        },
+        {
+          "id": "pulse-alpha-free",
+          "name": "Pulse Alpha Free",
+          "context": 1048576
         }
       ]
     },
