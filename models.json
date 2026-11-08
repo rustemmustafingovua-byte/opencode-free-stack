@@ -1,19 +1,14 @@
 {
-  "generatedAt": "2026-11-07T21:45:34.247Z",
+  "generatedAt": "2026-11-08T05:55:53.821Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
+          "id": "inkling-2-small-free",
+          "name": "Inkling 2 Small Free",
           "context": 1048576
-        },
-        {
-          "id": "iceman-free",
-          "name": "Iceman Free",
-          "context": 262144
         },
         {
           "id": "big-pickle",
@@ -21,9 +16,24 @@
           "context": 200000
         },
         {
+          "id": "iceman-free",
+          "name": "Iceman Free",
+          "context": 262144
+        },
+        {
           "id": "mimo-v2.6-flash-free",
           "name": "MiMo-V2.6-Flash Free",
           "context": 200000
+        },
+        {
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
+          "context": 262144
+        },
+        {
+          "id": "beam-free",
+          "name": "Beam Free",
+          "context": 1048576
         },
         {
           "id": "deepseek-v4.1-flash-free",
@@ -31,9 +41,14 @@
           "context": 200000
         },
         {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
-          "context": 262144
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
+          "context": 1048576
+        },
+        {
+          "id": "glm-5.3-flash-free",
+          "name": "GLM-5.3-Flash Free",
+          "context": 200000
         },
         {
           "id": "nemotron-3.5-lightning-free",
@@ -44,21 +59,6 @@
           "id": "crouton-alpha-free",
           "name": "Crouton Alpha Free",
           "context": 1048576
-        },
-        {
-          "id": "beam-free",
-          "name": "Beam Free",
-          "context": 1048576
-        },
-        {
-          "id": "inkling-2-small-free",
-          "name": "Inkling 2 Small Free",
-          "context": 1048576
-        },
-        {
-          "id": "glm-5.3-flash-free",
-          "name": "GLM-5.3-Flash Free",
-          "context": 200000
         }
       ]
     },
