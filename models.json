@@ -1,13 +1,18 @@
 {
-  "generatedAt": "2026-11-09T06:17:01.589Z",
+  "generatedAt": "2026-11-09T16:27:14.937Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "big-pickle",
-          "name": "Big Pickle",
+          "id": "crouton-alpha-free",
+          "name": "Crouton Alpha Free",
+          "context": 1048576
+        },
+        {
+          "id": "glm-5.3-flash-free",
+          "name": "GLM-5.3-Flash Free",
           "context": 200000
         },
         {
@@ -21,19 +26,29 @@
           "context": 262144
         },
         {
-          "id": "inkling-2-small-free",
-          "name": "Inkling 2 Small Free",
-          "context": 1048576
+          "id": "mimo-v2.6-flash-free",
+          "name": "MiMo-V2.6-Flash Free",
+          "context": 200000
         },
         {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
+          "id": "inkling-2-small-free",
+          "name": "Inkling 2 Small Free",
           "context": 1048576
         },
         {
           "id": "nemotron-3.5-lightning-free",
           "name": "Nemotron 3.5 Lightning Free",
           "context": 262144
+        },
+        {
+          "id": "big-pickle",
+          "name": "Big Pickle",
+          "context": 200000
+        },
+        {
+          "id": "longcat-2.5-free",
+          "name": "LongCat 2.5 Free",
+          "context": 1000000
         },
         {
           "id": "flint-40b-free",
@@ -46,19 +61,9 @@
           "context": 200000
         },
         {
-          "id": "crouton-alpha-free",
-          "name": "Crouton Alpha Free",
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
           "context": 1048576
-        },
-        {
-          "id": "glm-5.3-flash-free",
-          "name": "GLM-5.3-Flash Free",
-          "context": 200000
-        },
-        {
-          "id": "mimo-v2.6-flash-free",
-          "name": "MiMo-V2.6-Flash Free",
-          "context": 200000
         }
       ]
     },
