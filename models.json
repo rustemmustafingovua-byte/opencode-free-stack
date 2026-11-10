@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-10T14:47:53.795Z",
+  "generatedAt": "2026-11-10T23:15:08.992Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
@@ -11,39 +11,9 @@
           "context": 1048576
         },
         {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
-          "context": 1048576
-        },
-        {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
-        },
-        {
-          "id": "minimax-m3.1-flash-free",
-          "name": "MiniMax M3.1 Flash Free",
-          "context": 1000000
-        },
-        {
-          "id": "longcat-2.5-free",
-          "name": "LongCat 2.5 Free",
-          "context": 1000000
-        },
-        {
           "id": "deepseek-v4.1-flash-free",
           "name": "DeepSeek V4.1 Flash Free",
           "context": 200000
-        },
-        {
-          "id": "mimo-v2.6-flash-free",
-          "name": "MiMo-V2.6-Flash Free",
-          "context": 200000
-        },
-        {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
-          "context": 262144
         },
         {
           "id": "glm-5.3-flash-free",
@@ -51,9 +21,14 @@
           "context": 200000
         },
         {
-          "id": "iceman-free",
-          "name": "Iceman Free",
-          "context": 262144
+          "id": "longcat-2.5-free",
+          "name": "LongCat 2.5 Free",
+          "context": 1000000
+        },
+        {
+          "id": "mimo-v2.6-flash-free",
+          "name": "MiMo-V2.6-Flash Free",
+          "context": 200000
         },
         {
           "id": "beam-free",
@@ -61,9 +36,34 @@
           "context": 1048576
         },
         {
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
+          "context": 262144
+        },
+        {
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
+          "context": 1048576
+        },
+        {
+          "id": "iceman-free",
+          "name": "Iceman Free",
+          "context": 262144
+        },
+        {
           "id": "big-pickle",
           "name": "Big Pickle",
           "context": 200000
+        },
+        {
+          "id": "minimax-m3.1-flash-free",
+          "name": "MiniMax M3.1 Flash Free",
+          "context": 1000000
+        },
+        {
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
+          "context": 262144
         }
       ]
     },
@@ -72,6 +72,12 @@
       "baseURL": "https://api.apinex.bond/v1",
       "freeDailyTokens": 10000000,
       "free": [
+        {
+          "id": "free/kimi-k3",
+          "name": "Kimi K3",
+          "weight": 3,
+          "context": "1M"
+        },
         {
           "id": "free/deepseek-v4.1-flash",
           "name": "Deepseek V4.1 Flash 1017",
@@ -93,12 +99,6 @@
         {
           "id": "free/glm-5.3-flash",
           "name": "GLM-5.3 Flash",
-          "weight": 3,
-          "context": "1M"
-        },
-        {
-          "id": "free/kimi-k3",
-          "name": "Kimi K3",
           "weight": 3,
           "context": "1M"
         },
