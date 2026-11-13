@@ -1,28 +1,28 @@
 {
-  "generatedAt": "2026-11-12T23:34:05.774Z",
+  "generatedAt": "2026-11-13T06:35:55.166Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "mimo-v2.6-flash-free",
-          "name": "MiMo-V2.6-Flash Free",
+          "id": "big-pickle",
+          "name": "Big Pickle",
           "context": 200000
         },
         {
-          "id": "glm-5.3-flash-free",
-          "name": "GLM-5.3-Flash Free",
-          "context": 200000
-        },
-        {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
-          "context": 262144
+          "id": "inkling-2-small-free",
+          "name": "Inkling 2 Small Free",
+          "context": 1048576
         },
         {
           "id": "iceman-free",
           "name": "Iceman Free",
+          "context": 262144
+        },
+        {
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
           "context": 262144
         },
         {
@@ -31,8 +31,8 @@
           "context": 1048576
         },
         {
-          "id": "big-pickle",
-          "name": "Big Pickle",
+          "id": "deepseek-v4.1-flash-free",
+          "name": "DeepSeek V4.1 Flash Free",
           "context": 200000
         },
         {
@@ -41,29 +41,29 @@
           "context": 1000000
         },
         {
-          "id": "inkling-2-small-free",
-          "name": "Inkling 2 Small Free",
-          "context": 1048576
-        },
-        {
-          "id": "longcat-2.5-free",
-          "name": "LongCat 2.5 Free",
-          "context": 1000000
-        },
-        {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
           "context": 262144
         },
         {
-          "id": "deepseek-v4.1-flash-free",
-          "name": "DeepSeek V4.1 Flash Free",
+          "id": "mimo-v2.6-flash-free",
+          "name": "MiMo-V2.6-Flash Free",
           "context": 200000
         },
         {
           "id": "nemotron-3.5-super-vl-free",
           "name": "Nemotron 3.5 Super VL Free",
           "context": 1048576
+        },
+        {
+          "id": "glm-5.3-flash-free",
+          "name": "GLM-5.3-Flash Free",
+          "context": 200000
+        },
+        {
+          "id": "longcat-2.5-free",
+          "name": "LongCat 2.5 Free",
+          "context": 1000000
         }
       ]
     },
