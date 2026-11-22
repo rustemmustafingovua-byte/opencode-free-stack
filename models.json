@@ -1,38 +1,13 @@
 {
-  "generatedAt": "2026-11-21T19:09:42.039Z",
+  "generatedAt": "2026-11-22T06:39:32.166Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "big-pickle",
-          "name": "Big Pickle",
-          "context": 200000
-        },
-        {
-          "id": "iceman-free",
-          "name": "Iceman Free",
-          "context": 262144
-        },
-        {
           "id": "hy4-flash-free",
           "name": "Hy4 flash Free",
-          "context": 1048576
-        },
-        {
-          "id": "longcat-2.5-free",
-          "name": "LongCat 2.5 Free",
-          "context": 1000000
-        },
-        {
-          "id": "mimo-v2.6-flash-free",
-          "name": "MiMo-V2.6-Flash Free",
-          "context": 200000
-        },
-        {
-          "id": "nemotron-3.5-super-vl-free",
-          "name": "Nemotron 3.5 Super VL Free",
           "context": 1048576
         },
         {
@@ -41,13 +16,13 @@
           "context": 200000
         },
         {
-          "id": "beam-free",
-          "name": "Beam Free",
-          "context": 1048576
+          "id": "big-pickle",
+          "name": "Big Pickle",
+          "context": 200000
         },
         {
-          "id": "tidepool-alpha-free",
-          "name": "Tidepool Alpha Free",
+          "id": "beam-free",
+          "name": "Beam Free",
           "context": 1048576
         },
         {
@@ -56,8 +31,33 @@
           "context": 262144
         },
         {
+          "id": "tidepool-alpha-free",
+          "name": "Tidepool Alpha Free",
+          "context": 1048576
+        },
+        {
+          "id": "nemotron-3.5-super-vl-free",
+          "name": "Nemotron 3.5 Super VL Free",
+          "context": 1048576
+        },
+        {
+          "id": "longcat-2.5-free",
+          "name": "LongCat 2.5 Free",
+          "context": 1000000
+        },
+        {
           "id": "flint-40b-free",
           "name": "Flint 40B Free",
+          "context": 262144
+        },
+        {
+          "id": "mimo-v2.6-flash-free",
+          "name": "MiMo-V2.6-Flash Free",
+          "context": 200000
+        },
+        {
+          "id": "iceman-free",
+          "name": "Iceman Free",
           "context": 262144
         }
       ]
