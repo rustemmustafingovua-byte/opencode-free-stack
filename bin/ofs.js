@@ -10,7 +10,7 @@
 import { FreeRouter, routerFromEnv, listFreeModels, PROVIDERS } from "../src/index.js"
 
 // --- CLI shell: --help / --version -------------------------------------------
-const HELP = "ofs — Free-model router for OpenCode.\n\nUSAGE\n  ofs models\n  ofs status\n  ofs chain\n  ofs route \"explain quicksort\"\n\nCOMMANDS / OPTIONS\n  models          list every known free model, grouped by provider\n  status          which providers are configured and how much quota is left\n  chain           print the fallback order that would be used\n  route <prompt>  send one prompt through the fallback chain\n\nEnvironment: OPENCODE_API_KEY, GITHUB_TOKEN, BEATAPI_API_KEY, APINEX_API_KEY\n\nMIT · https://github.com/rustemmustafingovua-byte"
+const HELP = "ofs — Free-model router for OpenCode.\n\nUSAGE\n  ofs models\n  ofs status\n  ofs chain\n  ofs route \"explain quicksort\"\n\nCOMMANDS / OPTIONS\n  models          list every known free model, grouped by provider\n  status          which providers are configured and how much quota is left\n  chain           print the fallback order that would be used\n  route <prompt>  send one prompt through the fallback chain\n\nEnvironment: OPENCODE_API_KEY, GITHUB_TOKEN, BEATAPI_API_KEY, APINEX_API_KEY,\n  GROQ_API_KEY, CEREBRAS_API_KEY, GEMINI_API_KEY, GITLAB_TOKEN,\n  CLOUDFLARE_API_TOKEN (+ CLOUDFLARE_ACCOUNT_ID), MISTRAL_API_KEY,\n  SAMBANOVA_API_KEY, NEBIUS_API_KEY, TOGETHER_API_KEY\n\nMIT · https://github.com/rustemmustafingovua-byte"
 const VERSION = "0.1.0"
 if (process.argv.includes("--help") || process.argv.includes("-h")) {
   console.log(HELP)

@@ -9,7 +9,7 @@
  *   - returns which model answered, and why the others did not
  */
 
-import { PROVIDERS, fallbackChain, listFreeModels } from "./providers.js"
+import { PROVIDERS, fallbackChain, listFreeModels, resolveBaseURL } from "./providers.js"
 import { RateLimiter, PoolTracker, classify, isFatal } from "./quota.js"
 
 export class FreeRouter {
@@ -17,14 +17,17 @@ export class FreeRouter {
    * @param {object} [opts]
    * @param {Record<string,string>} [opts.keys] provider id -> api key
    * @param {Record<string,number>} [opts.rpm] provider id -> rpm override
+   * @param {Record<string,string>} [opts.env] env vars for URL templates (e.g. CLOUDFLARE_ACCOUNT_ID)
    */
   constructor(opts = {}) {
     this.keys = opts.keys || {}
+    this.env = opts.env || process.env
     this.limiters = new Map()
     this.pools = new PoolTracker()
     for (const p of Object.values(PROVIDERS)) {
       if (p.dailyTokens) this.pools.register(p.id, p.dailyTokens)
-      this.limiters.set(p.id, new RateLimiter(opts.rpm?.[p.id] ?? p.rpm))
+      const rpm = opts.rpm && Object.hasOwn(opts.rpm, p.id) ? opts.rpm[p.id] : p.rpm
+      this.limiters.set(p.id, new RateLimiter(rpm))
     }
   }
 
@@ -93,8 +96,18 @@ export class FreeRouter {
 
       let res
       let text
+      const baseURL = resolveBaseURL(p, this.env)
+      if (baseURL.includes("{accountId}")) {
+        attempts.push({
+          provider,
+          model,
+          kind: "config",
+          error: `missing account id env (${(p.accountEnv || []).join(" or ")})`,
+        })
+        continue
+      }
       try {
-        res = await fetch(`${p.baseURL}/chat/completions`, {
+        res = await fetch(`${baseURL}/chat/completions`, {
           method: "POST",
           headers,
           body: JSON.stringify(body),
@@ -156,7 +169,7 @@ export function routerFromEnv(env = process.env) {
       }
     }
   }
-  return new FreeRouter({ keys })
+  return new FreeRouter({ keys, env })
 }
 
 /** Every free model known to the registry. */
