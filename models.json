@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T07:28:29.745Z",
+  "generatedAt": "2026-11-23T23:48:55.215Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
@@ -11,28 +11,8 @@
           "context": 1048576
         },
         {
-          "id": "iceman-free",
-          "name": "Iceman Free",
-          "context": 262144
-        },
-        {
-          "id": "big-pickle",
-          "name": "Big Pickle",
-          "context": 200000
-        },
-        {
-          "id": "deepseek-v4.1-flash-free",
-          "name": "DeepSeek V4.1 Flash Free",
-          "context": 200000
-        },
-        {
           "id": "tidepool-alpha-free",
           "name": "Tidepool Alpha Free",
-          "context": 1048576
-        },
-        {
-          "id": "beam-free",
-          "name": "Beam Free",
           "context": 1048576
         },
         {
@@ -46,14 +26,34 @@
           "context": 200000
         },
         {
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
+          "context": 262144
+        },
+        {
+          "id": "big-pickle",
+          "name": "Big Pickle",
+          "context": 200000
+        },
+        {
+          "id": "iceman-free",
+          "name": "Iceman Free",
+          "context": 262144
+        },
+        {
+          "id": "beam-free",
+          "name": "Beam Free",
+          "context": 1048576
+        },
+        {
           "id": "flint-40b-free",
           "name": "Flint 40B Free",
           "context": 262144
         },
         {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
+          "id": "deepseek-v4.1-flash-free",
+          "name": "DeepSeek V4.1 Flash Free",
+          "context": 200000
         }
       ]
     },
