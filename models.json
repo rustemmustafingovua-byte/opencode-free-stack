@@ -1,18 +1,13 @@
 {
-  "generatedAt": "2026-11-25T08:24:23.768Z",
+  "generatedAt": "2026-11-25T21:37:45.978Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "iceman-free",
-          "name": "Iceman Free",
-          "context": 262144
-        },
-        {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
           "context": 262144
         },
         {
@@ -21,14 +16,9 @@
           "context": 1048576
         },
         {
-          "id": "beam-free",
-          "name": "Beam Free",
+          "id": "hy4-flash-free",
+          "name": "Hy4 flash Free",
           "context": 1048576
-        },
-        {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
         },
         {
           "id": "big-pickle",
@@ -36,8 +26,18 @@
           "context": 200000
         },
         {
-          "id": "hy4-flash-free",
-          "name": "Hy4 flash Free",
+          "id": "deepseek-v4.1-flash-free",
+          "name": "DeepSeek V4.1 Flash Free",
+          "context": 200000
+        },
+        {
+          "id": "iceman-free",
+          "name": "Iceman Free",
+          "context": 262144
+        },
+        {
+          "id": "beam-free",
+          "name": "Beam Free",
           "context": 1048576
         },
         {
@@ -46,14 +46,14 @@
           "context": 200000
         },
         {
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
+          "context": 262144
+        },
+        {
           "id": "nemotron-3.5-super-vl-free",
           "name": "Nemotron 3.5 Super VL Free",
           "context": 1048576
-        },
-        {
-          "id": "deepseek-v4.1-flash-free",
-          "name": "DeepSeek V4.1 Flash Free",
-          "context": 200000
         }
       ]
     },
@@ -113,7 +113,7 @@
         {
           "id": "free/minimax-m3.1-flash",
           "name": "MiniMax M3.1 Flash",
-          "weight": 2,
+          "weight": 3,
           "context": "1M"
         },
         {
