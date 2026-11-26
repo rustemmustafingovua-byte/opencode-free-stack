@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-11-26T08:08:48.327Z",
+  "generatedAt": "2026-11-26T21:26:36.827Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "nemotron-3.5-lightning-free",
-          "name": "Nemotron 3.5 Lightning Free",
-          "context": 262144
+          "id": "deepseek-v4.1-flash-free",
+          "name": "DeepSeek V4.1 Flash Free",
+          "context": 200000
         },
         {
           "id": "beam-free",
@@ -16,13 +16,18 @@
           "context": 1048576
         },
         {
-          "id": "deepseek-v4.1-flash-free",
-          "name": "DeepSeek V4.1 Flash Free",
-          "context": 200000
+          "id": "tidepool-alpha-free",
+          "name": "Tidepool Alpha Free",
+          "context": 1048576
         },
         {
-          "id": "iceman-free",
-          "name": "Iceman Free",
+          "id": "nemotron-3.5-lightning-free",
+          "name": "Nemotron 3.5 Lightning Free",
+          "context": 262144
+        },
+        {
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
           "context": 262144
         },
         {
@@ -31,13 +36,8 @@
           "context": 1048576
         },
         {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
-          "context": 262144
-        },
-        {
-          "id": "hy4-flash-free",
-          "name": "Hy4 flash Free",
+          "id": "seaglass-alpha-free",
+          "name": "Seaglass Alpha Free",
           "context": 1048576
         },
         {
@@ -46,18 +46,18 @@
           "context": 200000
         },
         {
+          "id": "iceman-free",
+          "name": "Iceman Free",
+          "context": 262144
+        },
+        {
           "id": "mimo-v2.6-flash-free",
           "name": "MiMo-V2.6-Flash Free",
           "context": 200000
         },
         {
-          "id": "seaglass-alpha-free",
-          "name": "Seaglass Alpha Free",
-          "context": 1048576
-        },
-        {
-          "id": "tidepool-alpha-free",
-          "name": "Tidepool Alpha Free",
+          "id": "hy4-flash-free",
+          "name": "Hy4 flash Free",
           "context": 1048576
         }
       ]
@@ -198,6 +198,12 @@
           "name": "Kimi K2.8",
           "weight": 2,
           "context": "1M"
+        },
+        {
+          "id": "free/drex-v2.0",
+          "name": "Drex 2.0",
+          "weight": 1,
+          "context": "131K"
         }
       ]
     }
