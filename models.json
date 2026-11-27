@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-11-27T08:19:34.661Z",
+  "generatedAt": "2026-11-27T21:11:14.206Z",
   "providers": {
     "zen": {
       "name": "OpenCode Zen",
       "baseURL": "https://opencode.ai/inference/openai/v1",
       "free": [
         {
-          "id": "flint-40b-free",
-          "name": "Flint 40B Free",
-          "context": 262144
+          "id": "seaglass-alpha-free",
+          "name": "Seaglass Alpha Free",
+          "context": 1048576
         },
         {
-          "id": "beam-free",
-          "name": "Beam Free",
-          "context": 1048576
+          "id": "iceman-free",
+          "name": "Iceman Free",
+          "context": 262144
         },
         {
           "id": "nemotron-3.5-super-vl-free",
@@ -21,9 +21,19 @@
           "context": 1048576
         },
         {
-          "id": "seaglass-alpha-free",
-          "name": "Seaglass Alpha Free",
+          "id": "beam-free",
+          "name": "Beam Free",
           "context": 1048576
+        },
+        {
+          "id": "flint-40b-free",
+          "name": "Flint 40B Free",
+          "context": 262144
+        },
+        {
+          "id": "mimo-v2.6-flash-free",
+          "name": "MiMo-V2.6-Flash Free",
+          "context": 200000
         },
         {
           "id": "deepseek-v4.1-flash-free",
@@ -36,29 +46,19 @@
           "context": 1048576
         },
         {
-          "id": "mimo-v2.6-flash-free",
-          "name": "MiMo-V2.6-Flash Free",
-          "context": 200000
-        },
-        {
-          "id": "iceman-free",
-          "name": "Iceman Free",
-          "context": 262144
-        },
-        {
           "id": "nemotron-3.5-lightning-free",
           "name": "Nemotron 3.5 Lightning Free",
           "context": 262144
         },
         {
-          "id": "big-pickle",
-          "name": "Big Pickle",
-          "context": 200000
-        },
-        {
           "id": "hy4-flash-free",
           "name": "Hy4 flash Free",
           "context": 1048576
+        },
+        {
+          "id": "big-pickle",
+          "name": "Big Pickle",
+          "context": 200000
         }
       ]
     },
